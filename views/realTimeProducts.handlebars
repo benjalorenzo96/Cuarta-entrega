@@ -1,0 +1,51 @@
+<!-- realTimeProducts.handlebars -->
+<h1>Lista de Productos en Tiempo Real</h1>
+<ul id="product-list">
+  {{#each products}}
+    <li>{{this.title}} - {{this.price}}</li>
+  {{/each}}
+</ul>
+<form id="add-product-form">
+  <!-- Agregar campos del formulario para agregar productos -->
+  <label for="title">Título:</label>
+  <input type="text" id="title" name="title" required>
+  <label for="price">Precio:</label>
+  <input type="number" id="price" name="price" required>
+  <!-- Agregar otros campos del formulario aquí -->
+  <button type="submit">Agregar Producto</button>
+</form>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+
+  // Escuchar eventos de actualización de productos
+  socket.on('productAdded', (product) => {
+    const productList = document.getElementById('product-list');
+    const newItem = document.createElement('li');
+    newItem.textContent = `${product.title} - ${product.price}`;
+    productList.appendChild(newItem);
+  });
+
+  socket.on('productDeleted', (productId) => {
+    // Eliminar el producto de la lista
+    // Implementa esta lógica si deseas manejar la eliminación en tiempo real
+  });
+
+  // Manejar envío de formulario para agregar productos
+  document.getElementById('add-product-form').addEventListener('submit', (event) => {
+    event.preventDefault();
+    const title = document.getElementById('title').value;
+    const price = parseFloat(document.getElementById('price').value);
+    // Obtener otros datos del formulario
+
+    const newProduct = { title, price /* otros campos */ };
+    socket.emit('addProduct', newProduct);
+
+    // Limpiar campos del formulario
+    document.getElementById('title').value = '';
+    document.getElementById('price').value = '';
+    // Limpiar otros campos del formulario
+  });
+</script>
+
