@@ -1,8 +1,8 @@
-const express = require('express');
-const fs = require('fs/promises');
-const path = require('path');
-const http = require('http').createServer(app);
-const io = require('socket.io')(http);
+import express from 'express';
+import fs from 'fs/promises';
+import path from 'path';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
 
 const app = express();
 app.use(express.json());

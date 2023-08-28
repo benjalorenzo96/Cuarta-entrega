@@ -1,11 +1,11 @@
-const express = require('express');
-const petsRouter = express.Router();
-const multer = require('multer');
-const path = require('path');
+import express from 'express';
+import multer from 'multer';
+import path from 'path';
 
+const petsRouter = express.Router();
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, 'public', 'uploads')); // Carpeta donde se guardarán los archivos
+    cb(null, path.join(new URL(import.meta.url).pathname, 'public', 'uploads'));
   },
   filename: (req, file, cb) => {
     const timestamp = Date.now();
@@ -25,11 +25,12 @@ petsRouter.get('/', (req, res) => {
 petsRouter.post('/', upload.single('file'), (req, res) => {
   const newPet = {
     name: req.body.name,
-    thumbnail: `/uploads/${req.file.filename}` // Ruta de la imagen guardada
+    thumbnail: `/uploads/${req.file.filename}`
   };
   pets.push(newPet);
   res.status(201).json(newPet);
 });
 
-module.exports = petsRouter;
+export default petsRouter;
+
 

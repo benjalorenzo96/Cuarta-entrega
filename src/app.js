@@ -1,10 +1,11 @@
-const express = require('express');
-const app = express();
-const path = require('path');
-const ProductManager = require('./ProductManager');
-const usersRouter = require('./usersRouter');
-const petsRouter = require('./petsRouter');
-const productManager = new ProductManager('Productos.json');
+import express from 'express';
+import path from 'path';
+import exphbs from 'express-handlebars';
+import http from 'http';
+import { Server } from 'socket.io';
+import usersRouter from './usersRouter.js';
+import petsRouter from './petsRouter.js';
+import ProductManager from './ProductManager.js';
 
 const exphbs = require('express-handlebars');
 app.engine('handlebars', exphbs());
