@@ -7,6 +7,8 @@ import { Server } from 'socket.io';
 const app = express();
 app.use(express.json());
 
+const httpServer = createServer(app); // Crear un servidor HTTP
+
 const PRODUCTS_FILE = path.join(__dirname, 'productos.json');
 const CARTS_FILE = path.join(__dirname, 'carrito.json');
 
@@ -30,6 +32,8 @@ async function writeFile(filePath, data) {
 }
 
 // Configurar WebSocket
+const io = new Server(http);
+
 io.on('connection', (socket) => {
   console.log('Usuario conectado al socket');
 
@@ -61,9 +65,6 @@ io.on('connection', (socket) => {
     console.log('Usuario desconectado del socket');
   });
 });
-
-
-
 
 
 // Manejo de rutas para productos
@@ -198,3 +199,6 @@ const PORT = 8080;
 app.listen(PORT, () => {
   console.log(`Servidor Express escuchando en el puerto ${PORT}`);
 });
+
+module.exports = app;
+export default app;

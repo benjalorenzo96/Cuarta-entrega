@@ -7,12 +7,14 @@ import usersRouter from './usersRouter.js';
 import petsRouter from './petsRouter.js';
 import ProductManager from './ProductManager.js';
 
-const exphbs = require('express-handlebars');
+const app = express(); // Crear la instancia de Express
+
 app.engine('handlebars', exphbs());
 app.set('view engine', 'handlebars');
 
-const http = require('http').createServer(app);
-const io = require('socket.io')(http);
+const httpServer = http.createServer(app); // Crear el servidor HTTP
+
+const io = new Server(httpServer); // Crear instancia de Socket.io y pasar el servidor HTTP
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -47,6 +49,6 @@ app.get('/realtimeproducts', (req, res) => {
 // Resto de tus rutas y código existente
 
 const PORT = 8080;
-http.listen(PORT, () => {
+httpServer.listen(PORT, () => {
   console.log(`Servidor Express y WebSocket escuchando en el puerto ${PORT}`);
 });
