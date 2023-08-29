@@ -1,16 +1,12 @@
-import express from 'express';
 import fs from 'fs/promises';
 import path from 'path';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
+import { httpServer, io, app } from './src/app';
 
-const app = express();
-app.use(express.json());
+const __filename = new URL(import.meta.url).pathname;
+const __dirname = path.dirname(__filename);
 
-const httpServer = createServer(app); // Crear un servidor HTTP
-
-const PRODUCTS_FILE = path.join(__dirname, 'productos.json');
-const CARTS_FILE = path.join(__dirname, 'carrito.json');
 
 // Leer contenido del archivo
 async function readFile(filePath) {
@@ -32,8 +28,6 @@ async function writeFile(filePath, data) {
 }
 
 // Configurar WebSocket
-const io = new Server(http);
-
 io.on('connection', (socket) => {
   console.log('Usuario conectado al socket');
 
@@ -196,9 +190,7 @@ cartsRouter.post('/:cid/product/:pid', async (req, res) => {
 app.use('/api/carts', cartsRouter);
 
 const PORT = 8080;
-app.listen(PORT, () => {
-  console.log(`Servidor Express escuchando en el puerto ${PORT}`);
+httpServer.listen(PORT, () => {
+  console.log(`Servidor Express y WebSocket escuchando en el puerto ${PORT}`);
 });
 
-module.exports = app;
-export default app;

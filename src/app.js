@@ -1,20 +1,16 @@
 import express from 'express';
-import path from 'path';
-import exphbs from 'express-handlebars';
 import http from 'http';
 import { Server } from 'socket.io';
-import usersRouter from './usersRouter.js';
-import petsRouter from './petsRouter.js';
-import ProductManager from './ProductManager.js';
+import path from 'path';
+import exphbs from 'express-handlebars';
+
 
 const app = express(); // Crear la instancia de Express
 
 app.engine('handlebars', exphbs());
 app.set('view engine', 'handlebars');
 
-const httpServer = http.createServer(app); // Crear el servidor HTTP
 
-const io = new Server(httpServer); // Crear instancia de Socket.io y pasar el servidor HTTP
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -52,3 +48,4 @@ const PORT = 8080;
 httpServer.listen(PORT, () => {
   console.log(`Servidor Express y WebSocket escuchando en el puerto ${PORT}`);
 });
+export { app, httpServer, io };

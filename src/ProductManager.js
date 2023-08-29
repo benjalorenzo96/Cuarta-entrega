@@ -79,4 +79,4 @@ async function main() {
 
 main();
 
-module.exports = ProductManager;
+export default ProductManager;
