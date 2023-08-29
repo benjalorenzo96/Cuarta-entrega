@@ -3,11 +3,22 @@ import http from 'http';
 import { Server } from 'socket.io';
 import path from 'path';
 import exphbs from 'express-handlebars';
-
+import usersRouter from './src/usersRouter.js'; // Importa el usersRouter
+import petsRouter from './src/petsRouter.js';   // Importa el petsRouter
 
 const app = express(); // Crear la instancia de Express
+const httpServer = http.createServer(app); // Crear el servidor HTTP
+const io = new Server(httpServer); // Crear la instancia de Socket.IO
 
-app.engine('handlebars', exphbs());
+
+// Configurar el motor de plantillas
+app.engine(
+  'handlebars',
+  exphbs({
+    extname: '.handlebars', // Extensión de los archivos de plantilla
+    defaultLayout: 'main', // Layout por defecto
+  })
+);
 app.set('view engine', 'handlebars');
 
 
@@ -49,3 +60,4 @@ httpServer.listen(PORT, () => {
   console.log(`Servidor Express y WebSocket escuchando en el puerto ${PORT}`);
 });
 export { app, httpServer, io };
+

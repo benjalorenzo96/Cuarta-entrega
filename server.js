@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
-import { httpServer, io, app } from './src/app';
+import { httpServer, io, app } from './app.js';
 
 const __filename = new URL(import.meta.url).pathname;
 const __dirname = path.dirname(__filename);
