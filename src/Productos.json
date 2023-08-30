@@ -25,5 +25,41 @@
     "thumbnail": "thumbnail3.jpg",
     "code": "PROD003",
     "stock": 70
+  },
+  {
+    "id": 4,
+    "title": "Producto 4",
+    "description": "Descripción del producto 4",
+    "price": 600,
+    "thumbnail": "thumbnail4.jpg",
+    "code": "PROD004",
+    "stock": 30
+  },
+  {
+    "id": 5,
+    "title": "Producto 5",
+    "description": "Descripción del producto 5",
+    "price": 100,
+    "thumbnail": "thumbnail5.jpg",
+    "code": "PROD005",
+    "stock": 30
+  },
+  {
+    "id": 6,
+    "title": "Producto 6",
+    "description": "Descripción del producto 6",
+    "price": 150,
+    "thumbnail": "thumbnail6.jpg",
+    "code": "PROD006",
+    "stock": 30
+  },
+  {
+    "id": 7,
+    "title": "Producto 7",
+    "description": "Descripción del producto 7",
+    "price": 350,
+    "thumbnail": "thumbnail7.jpg",
+    "code": "PROD007",
+    "stock": 30
   }
 ]

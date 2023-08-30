@@ -2,9 +2,19 @@
 <h1>Lista de Productos en Tiempo Real</h1>
 <ul id="product-list">
   {{#each products}}
-    <li>{{this.title}} - {{this.price}}</li>
+    <li>
+      {{this.title}} - Precio: {{this.price}}
+      <form class="add-to-cart-form">
+        <input type="hidden" name="productId" value="{{this.id}}">
+        <label for="quantity">Cantidad:</label>
+        <input type="number" name="quantity" value="1" min="1" max="{{this.stock}}" required>
+        <button type="submit">Agregar al carrito</button>
+        <span>Subtotal: $<span class="subtotal">{{this.price}}</span></span>
+      </form>
+    </li>
   {{/each}}
 </ul>
+
 <form id="add-product-form">
   <!-- Agregar campos del formulario para agregar productos -->
   <label for="title">Título:</label>
@@ -23,13 +33,17 @@
   socket.on('productAdded', (product) => {
     const productList = document.getElementById('product-list');
     const newItem = document.createElement('li');
-    newItem.textContent = `${product.title} - ${product.price}`;
+    newItem.innerHTML = `
+      ${product.title} - Precio: ${product.price}
+      <form class="add-to-cart-form">
+        <input type="hidden" name="productId" value="${product.id}">
+        <label for="quantity">Cantidad:</label>
+        <input type="number" name="quantity" value="1" min="1" max="${product.stock}" required>
+        <button type="submit">Agregar al carrito</button>
+        <span>Subtotal: $<span class="subtotal">${product.price}</span></span>
+      </form>
+    `;
     productList.appendChild(newItem);
-  });
-
-  socket.on('productDeleted', (productId) => {
-    // Eliminar el producto de la lista
-    // Implementa esta lógica si deseas manejar la eliminación en tiempo real
   });
 
   // Manejar envío de formulario para agregar productos
@@ -47,5 +61,27 @@
     document.getElementById('price').value = '';
     // Limpiar otros campos del formulario
   });
+
+  // Escuchar envío de formulario para agregar al carrito
+  document.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (event.target.classList.contains('add-to-cart-form')) {
+      const formData = new FormData(event.target);
+      const productId = formData.get('productId');
+      const quantity = parseInt(formData.get('quantity'));
+      const product = products.find((p) => p.id === parseInt(productId));
+      if (product) {
+        const subtotal = product.price * quantity;
+        const subtotalElement = event.target.querySelector('.subtotal');
+        subtotalElement.textContent = subtotal;
+      }
+    }
+  });
 </script>
+
+
+
+
+
+
 

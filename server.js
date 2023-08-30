@@ -29,6 +29,8 @@ async function writeFile(filePath, data) {
 }
 
 // Configurar WebSocket
+const PRODUCTS_FILE = './src/Productos.json';
+
 io.on('connection', (socket) => {
   console.log('Usuario conectado al socket');
 
@@ -188,6 +190,7 @@ cartsRouter.post('/:cid/product/:pid', async (req, res) => {
 });
 
 app.use('/api/carts', cartsRouter);
+
 
 const PORT = 8080;
 httpServer.listen(PORT, () => {
