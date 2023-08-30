@@ -5,11 +5,11 @@ import path from 'path';
 import exphbs from 'express-handlebars';
 import usersRouter from './src/usersRouter.js'; // Importa el usersRouter
 import petsRouter from './src/petsRouter.js';   // Importa el petsRouter
+import { fileURLToPath } from 'url';
 
 const app = express(); // Crear la instancia de Express
 const httpServer = http.createServer(app); // Crear el servidor HTTP
 const io = new Server(httpServer); // Crear la instancia de Socket.IO
-
 
 // Configurar el motor de plantillas
 app.engine(
@@ -22,13 +22,14 @@ app.engine(
 app.set('view engine', 'handlebars');
 
 
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/users', usersRouter);
 app.use('/api/pets', petsRouter);
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Configurar WebSocket
@@ -55,9 +56,7 @@ app.get('/realtimeproducts', (req, res) => {
 
 // Resto de tus rutas y código existente
 
-const PORT = 8080;
-httpServer.listen(PORT, () => {
-  console.log(`Servidor Express y WebSocket escuchando en el puerto ${PORT}`);
-});
+
 export { app, httpServer, io };
+
 

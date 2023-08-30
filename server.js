@@ -1,12 +1,13 @@
+import express from 'express';
 import fs from 'fs/promises';
 import path from 'path';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { httpServer, io, app } from './app.js';
 
+
 const __filename = new URL(import.meta.url).pathname;
 const __dirname = path.dirname(__filename);
-
 
 // Leer contenido del archivo
 async function readFile(filePath) {
@@ -59,7 +60,6 @@ io.on('connection', (socket) => {
     console.log('Usuario desconectado del socket');
   });
 });
-
 
 // Manejo de rutas para productos
 const productsRouter = express.Router();
@@ -193,4 +193,5 @@ const PORT = 8080;
 httpServer.listen(PORT, () => {
   console.log(`Servidor Express y WebSocket escuchando en el puerto ${PORT}`);
 });
+
 
