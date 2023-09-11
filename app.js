@@ -3,13 +3,28 @@ import http from 'http';
 import { Server } from 'socket.io';
 import path from 'path';
 import exphbs from 'express-handlebars';
-import usersRouter from './src/usersRouter.js'; // Importa el usersRouter
-import petsRouter from './src/petsRouter.js';   // Importa el petsRouter
+import usersRouter from './src/router/usersRouter.js'; // Importa el usersRouter
+import petsRouter from './src/router/petsRouter.js';   // Importa el petsRouter
 import { fileURLToPath } from 'url';
+import mongoose from 'mongoose';
 
 const app = express(); // Crear la instancia de Express
 const httpServer = http.createServer(app); // Crear el servidor HTTP
 const io = new Server(httpServer); // Crear la instancia de Socket.IO
+const mongoose = require('mongoose');
+
+// Conectar a la base de datos
+mongoose.connect('mongodb://localhost:27017/ecommerce', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+const db = mongoose.connection;
+
+db.on('error', console.error.bind(console, 'Error de conexión a MongoDB:'));
+db.once('open', () => {
+  console.log('Conexión a MongoDB exitosa.');
+});
 
 // Configurar el motor de plantillas
 app.engine(

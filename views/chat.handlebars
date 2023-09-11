@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <link rel="stylesheet" href="../styles.css"> 
+</head>
+
+<body>
+    <h1>Chat en Vivo</h1>
+
+    <!-- Mostrar mensajes anteriores -->
+    <div id="chat-messages">
+        {{#each messages}}
+        <div class="message">
+            <strong>{{this.user}}:</strong> {{this.message}}
+        </div>
+        {{/each}}
+    </div>
+
+    <!-- Formulario para enviar mensajes -->
+    <form id="chat-form">
+        <input type="text" id="user" placeholder="Tu Nombre" required>
+        <input type="text" id="message" placeholder="Escribe un mensaje" required>
+        <button type="submit">Enviar</button>
+    </form>
+
+    <script>
+        const chatForm = document.getElementById('chat-form');
+        const chatMessages = document.getElementById('chat-messages');
+
+        // Evento para enviar un nuevo mensaje
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const user = document.getElementById('user').value;
+            const message = document.getElementById('message').value;
+
+            // Enviar el mensaje al servidor (implementa la lógica del lado del servidor)
+            socket.emit('chatMessage', { user, message });
+
+            // Limpia el campo de entrada de mensajes
+            document.getElementById('message').value = '';
+        });
+
+        // Función para agregar un mensaje al chat
+        function appendMessage(user, message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.innerHTML = `<strong>${user}:</strong> ${message}`;
+            chatMessages.appendChild(messageDiv);
+        }
+
+        // Evento para recibir y mostrar un mensaje del servidor
+        socket.on('chatMessage', ({ user, message }) => {
+            appendMessage(user, message);
+        });
+
+        // Implementa la lógica para cargar mensajes anteriores desde MongoDB (si es necesario)
+
+    </script>
+</body>
+
+</html>
