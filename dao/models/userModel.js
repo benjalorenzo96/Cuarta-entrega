@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 // Define el esquema de usuario
 const userSchema = new mongoose.Schema({
@@ -8,7 +8,6 @@ const userSchema = new mongoose.Schema({
   // Agrega otras propiedades de usuario según tus necesidades
 });
 
-// Crea el modelo User basado en el esquema
 const User = mongoose.model('User', userSchema);
 
-module.exports = User;
+export default User;

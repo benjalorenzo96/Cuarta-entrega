@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrito de Compras</title>
+</head>
+<body>
+  <h1>Carrito de Compras</h1>
+  <ul>
+    {{#each cart.products}}
+      <li>
+        <h2>{{this.product.title}}</h2>
+        <p>Precio: ${{this.product.price}}</p>
+        <p>Cantidad: {{this.quantity}}</p>
+        <button onclick="removeFromCart('{{this.product._id}}')">Eliminar</button>
+      </li>
+    {{/each}}
+  </ul>
+
+  <button onclick="checkout()">Pagar</button>
+
+  <script>
+    // Función para eliminar un producto del carrito
+    function removeFromCart(productId) {
+      // Implementa la lógica para eliminar el producto del carrito aquí
+      // Puedes usar AJAX o fetch para enviar una solicitud al servidor
+      console.log('Eliminado del carrito: ', productId);
+    }
+
+    // Función para procesar el pago
+    function checkout() {
+      // Implementa la lógica para procesar el pago aquí
+      // Puedes redirigir al usuario a una pasarela de pago o realizar otras acciones necesarias
+      console.log('Procesando el pago...');
+    }
+  </script>
+</body>
+</html>

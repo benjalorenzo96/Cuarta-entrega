@@ -4,19 +4,19 @@ import { Server } from 'socket.io';
 import path from 'path';
 import exphbs from 'express-handlebars';
 import usersRouter from './src/router/usersRouter.js'; // Importa el usersRouter
-import petsRouter from './src/router/petsRouter.js';   // Importa el petsRouter
+import petsRouter from './src/router/petsRouter.js'; // Importa el petsRouter
 import { fileURLToPath } from 'url';
 import mongoose from 'mongoose';
 
 const app = express(); // Crear la instancia de Express
 const httpServer = http.createServer(app); // Crear el servidor HTTP
 const io = new Server(httpServer); // Crear la instancia de Socket.IO
-const mongoose = require('mongoose');
 
-// Conectar a la base de datos
-mongoose.connect('mongodb://localhost:27017/ecommerce', {
+// Conectar a la base de datos MongoDB
+mongoose.connect('mongodb+srv://benjalorenzo96:<Benjam96>@codercluster.8hfnnf7.mongodb.net/?retryWrites=true&w=majority', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useCreateIndex: true, // Agregado para evitar advertencias de Mongoose
 });
 
 const db = mongoose.connection;
@@ -35,7 +35,6 @@ app.engine(
   })
 );
 app.set('view engine', 'handlebars');
-
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -71,7 +70,7 @@ app.get('/realtimeproducts', (req, res) => {
 
 // Resto de tus rutas y código existente
 
-
 export { app, httpServer, io };
+
 
 
