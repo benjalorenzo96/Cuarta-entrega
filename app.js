@@ -13,10 +13,9 @@ const httpServer = http.createServer(app); // Crear el servidor HTTP
 const io = new Server(httpServer); // Crear la instancia de Socket.IO
 
 // Conectar a la base de datos MongoDB
-mongoose.connect('mongodb+srv://benjalorenzo96:<Benjam96>@codercluster.8hfnnf7.mongodb.net/?retryWrites=true&w=majority', {
+mongoose.connect('mongodb+srv://benjalorenzo96:Benjam96@codercluster.8hfnnf7.mongodb.net/?retryWrites=true&w=majority', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  useCreateIndex: true, // Agregado para evitar advertencias de Mongoose
 });
 
 const db = mongoose.connection;

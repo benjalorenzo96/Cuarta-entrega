@@ -1,6 +1,6 @@
 import express from 'express';
-import { createUser, getAllUsers } from '../../dao/mongo/usersMongoManager';
-import User from '../../dao/models/userModel';
+import { createUser, getAllUsers } from '../../dao/mongo/usersMongoManager.js';
+import User from '../../dao/models/userModel.js';
 
 const usersRouter = express.Router();
 

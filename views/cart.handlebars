@@ -23,17 +23,37 @@
   <script>
     // Función para eliminar un producto del carrito
     function removeFromCart(productId) {
-      // Implementa la lógica para eliminar el producto del carrito aquí
-      // Puedes usar AJAX o fetch para enviar una solicitud al servidor
-      console.log('Eliminado del carrito: ', productId);
+
+      // Obtén el ID del producto desde el atributo data-product-id
+      const productIdToRemove = productId;
+      
+      // Aquí puedes realizar una solicitud al servidor para eliminar el producto del carrito
+      // Ejemplo de solicitud fetch (debes implementar tu ruta y método correspondientes)
+      fetch(`/api/carts/:cid/products/${productIdToRemove}`, {
+        method: 'DELETE',
+      })
+      .then(response => {
+        if (response.status === 204) {
+          // Producto eliminado con éxito
+          console.log('Producto eliminado del carrito:', productIdToRemove);
+          // Actualiza la vista o realiza cualquier otra acción necesaria
+        } else {
+          console.error('Error al eliminar el producto del carrito');
+        }
+      })
+      .catch(error => {
+        console.error('Error de red:', error);
+      });
     }
 
     // Función para procesar el pago
     function checkout() {
       // Implementa la lógica para procesar el pago aquí
-      // Puedes redirigir al usuario a una pasarela de pago o realizar otras acciones necesarias
-      console.log('Procesando el pago...');
+
+      // Redirige al usuario a una pasarela de pago
+      window.location.href = 'https://pasarela-de-pago.com'; // Debo cambiar esta URL por la pasarela de pago real
     }
   </script>
 </body>
 </html>
+
