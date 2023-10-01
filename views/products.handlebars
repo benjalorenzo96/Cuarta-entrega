@@ -7,6 +7,7 @@
 </head>
 <body>
   <h1>Lista de Productos</h1>
+  <p>Bienvenido, {{user.username}} (Rol: {{user.role}})</p>
   <ul>
     {{#each products}}
       <li>
@@ -18,6 +19,9 @@
       </li>
     {{/each}}
   </ul>
+  <form action="/api/sessions/logout" method="POST">
+    <button type="submit">Cerrar Sesión</button>
+</form>
 
   <script>
     // Función para agregar un producto al carrito

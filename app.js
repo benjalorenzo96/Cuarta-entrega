@@ -5,8 +5,12 @@ import path from 'path';
 import exphbs from 'express-handlebars';
 import usersRouter from './src/router/usersRouter.js'; // Importa el usersRouter
 import petsRouter from './src/router/petsRouter.js'; // Importa el petsRouter
+import sessionsRouter from './src/router/sessionsRouter.js'; // Importa el sessionsRouter
+import viewsRouter from './src/router/viewsRouter.js'; // Importa el viewsRouter
 import { fileURLToPath } from 'url';
 import mongoose from 'mongoose';
+import session from 'express-session'; // Importa express-session
+
 
 const app = express(); // Crear la instancia de Express
 const httpServer = http.createServer(app); // Crear el servidor HTTP
@@ -38,8 +42,19 @@ app.set('view engine', 'handlebars');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Configurar express-session
+app.use(
+  session({
+    secret: 'tu-secreto', // Cambia esto a una cadena segura
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
 app.use('/api/users', usersRouter);
 app.use('/api/pets', petsRouter);
+app.use('/api/sessions', sessionsRouter); // Agrega el router de sesiones
+app.use('/', viewsRouter); // Agrega el router de vistas en la ruta base
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

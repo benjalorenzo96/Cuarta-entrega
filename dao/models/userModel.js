@@ -6,6 +6,11 @@ const userSchema = new mongoose.Schema({
   email: String,
   password: String, // Debes considerar el cifrado de contraseñas en un entorno de producción
   // Agrega otras propiedades de usuario según tus necesidades
+  role: {
+    type: String,
+    enum: ['admin', 'usuario'], // Roles permitidos
+    default: 'usuario', // Por defecto, un nuevo usuario tiene el rol "usuario"
+},
 });
 
 const User = mongoose.model('User', userSchema);
