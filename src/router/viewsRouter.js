@@ -24,10 +24,13 @@ viewsRouter.get('/login', (req, res) => {
   res.render('login'); // Renderiza el formulario de inicio de sesión
 });
 
-// Ruta para el perfil del usuario (requiere autenticación)
-viewsRouter.get('/profile', isAuthenticated, (req, res) => {
+// Ruta para la vista de productos (requiere autenticación)
+viewsRouter.get('/products', isAuthenticated, (req, res) => {
   const user = req.session.user; // El usuario autenticado está en la sesión
-  res.render('profile', { user }); // Renderiza la vista de perfil con los datos del usuario
+  const products = []; // Aquí debes obtener la lista de productos, probablemente desde tu base de datos
+
+  res.render('products', { user, products }); // Renderiza la vista de productos con los datos del usuario y productos
 });
+
 
 export default viewsRouter;

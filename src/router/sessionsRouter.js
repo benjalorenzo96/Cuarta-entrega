@@ -41,7 +41,8 @@ sessionsRouter.post('/login', async (req, res) => {
     // Almacena el usuario en la sesión
     req.session.user = user;
 
-    res.json({ message: 'Inicio de sesión exitoso.', user });
+    // Redirige al usuario a la vista de productos
+    res.redirect('/products');
   } catch (error) {
     res.status(500).json({ error: 'Error al iniciar sesión.' });
   }
