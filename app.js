@@ -82,6 +82,11 @@ app.get('/realtimeproducts', (req, res) => {
   res.render('realTimeProducts', { products }); // Renderizar la vista con los productos
 });
 
+// Ruta principal para mostrar el formulario de inicio de sesión
+app.get('/', (req, res) => {
+  res.render('login'); // Renderiza el formulario de inicio de sesión
+});
+
 // Resto de tus rutas y código existente
 
 export { app, httpServer, io };
