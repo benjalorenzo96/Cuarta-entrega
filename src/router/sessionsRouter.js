@@ -53,10 +53,13 @@ sessionsRouter.post('/login', (req, res, next) => {
       if (err) {
         return next(err);
       }
+      // Almacenar el nombre de usuario en la sesión
+      req.session.user = user.username;
       return res.redirect('/products'); 
     });
   })(req, res, next);
 });
+
 
 // Ruta para cerrar sesión
 sessionsRouter.post('/logout', (req, res) => {
