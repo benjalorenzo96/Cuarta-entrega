@@ -1,7 +1,7 @@
 import express from 'express';
 import passport from 'passport';
 import bcrypt from 'bcrypt';
-import User from '../../dao/models/userModel.js'; // Asegúrate de importar tu modelo de usuario
+import User from '../../dao/models/userModel.js';
 
 const sessionsRouter = express.Router();
 
@@ -30,8 +30,6 @@ sessionsRouter.post('/register', async (req, res) => {
 
     await newUser.save();
 
-    // Puedes agregar lógica adicional, como iniciar sesión automáticamente después del registro
-
     res.status(201).json(newUser);
   } catch (error) {
     res.status(500).json({ error: 'Error al registrar el usuario.' });
@@ -45,27 +43,21 @@ sessionsRouter.post('/login', (req, res, next) => {
       return next(err);
     }
     if (!user) {
-      // La autenticación ha fallado, redirige al formulario de inicio de sesión
-      return res.redirect('/login');
+      return res.status(401).json({ error: 'Usuario no autenticado' });
     }
-    // La autenticación ha tenido éxito, inicia sesión en el usuario y redirige
     req.logIn(user, (err) => {
       if (err) {
         return next(err);
       }
-      // Almacenar el nombre de usuario en la sesión
-      req.session.user = user.username;
-      return res.redirect('/products'); 
+      res.json({ message: 'Sesión iniciada correctamente' });
     });
   })(req, res, next);
 });
 
-
 // Ruta para cerrar sesión
 sessionsRouter.post('/logout', (req, res) => {
-  // Destruye la sesión actual
   req.logout();
-  res.json({ message: 'Sesión cerrada correctamente.' });
+  res.json({ message: 'Sesión cerrada correctamente' });
 });
 
 // Ruta para autenticación de GitHub
@@ -73,8 +65,8 @@ sessionsRouter.get('/github', passport.authenticate('github'));
 
 // Ruta de retorno de GitHub después de la autenticación
 sessionsRouter.get('/github/callback', passport.authenticate('github', {
-  successRedirect: '/products', // Redirige al usuario a la vista de productos si la autenticación tiene éxito
-  failureRedirect: '/login',    // Redirige al usuario de nuevo al formulario de inicio de sesión si la autenticación falla
+  successRedirect: '/products',
+  failureRedirect: '/login',
 }));
 
 export default sessionsRouter;

@@ -1,18 +1,26 @@
 import mongoose from 'mongoose';
 
-// Define el esquema de usuario
 const userSchema = new mongoose.Schema({
-  username: String,
-  email: String,
-  password: String, // Debes considerar el cifrado de contraseñas en un entorno de producción
-  // Agrega otras propiedades de usuario según tus necesidades
+  first_name: String,
+  last_name: String,
+  email: {
+    type: String,
+    unique: true, // Asegura que el correo electrónico sea único
+  },
+  age: Number,
+  password: String, // Este campo debe almacenar la contraseña hasheada
+  cart: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Cart', // Referencia al modelo de carritos
+  },
   role: {
     type: String,
-    enum: ['admin', 'usuario'], // Roles permitidos
-    default: 'usuario', // Por defecto, un nuevo usuario tiene el rol "usuario"
-},
+    enum: ['admin', 'usuario'],
+    default: 'usuario',
+  },
 });
 
 const User = mongoose.model('User', userSchema);
 
 export default User;
+
