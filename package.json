@@ -2,7 +2,10 @@
   "type": "module",
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "commander": "^11.1.0",
     "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-handlebars": "^5.3.5",
     "express-session": "^1.17.3",
@@ -30,6 +33,7 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "@types/express-handlebars": "^6.0.0"
+    "@types/express-handlebars": "^6.0.0",
+    "ts-node": "^10.9.1"
   }
 }

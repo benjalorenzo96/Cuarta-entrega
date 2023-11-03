@@ -3,26 +3,43 @@ import http from 'http';
 import { Server } from 'socket.io';
 import path from 'path';
 import exphbs from 'express-handlebars';
-import usersRouter from './src/router/usersRouter.js'; // Importa el usersRouter
-import petsRouter from './src/router/petsRouter.js'; // Importa el petsRouter
-import sessionsRouter from './src/router/sessionsRouter.js'; // Importa el sessionsRouter
-import viewsRouter from './src/router/viewsRouter.js'; // Importa el viewsRouter
+import usersRouter from './src/router/usersRouter.js';
+import petsRouter from './src/router/petsRouter.js';
+import sessionsRouter from './src/router/sessionsRouter.js';
+import viewsRouter from './src/router/viewsRouter.js';
 import { fileURLToPath } from 'url';
 import mongoose from 'mongoose';
-import session from 'express-session'; // Importa express-session
-import passport from 'passport'; // Importa passport
-import GitHubStrategy from 'passport-github2'; // Importa GitHubStrategy
-import bcrypt from 'bcrypt'; // Importa bcrypt
-import User from './dao/models/userModel.js'; // Asegúrate de importar tu modelo de usuario
-import LocalStrategy from 'passport-local'; // Importa LocalStrategy si usas esta estrategia
+import session from 'express-session';
+import passport from 'passport';
+import GitHubStrategy from 'passport-github2';
+import bcrypt from 'bcrypt';
+import User from './src/dao/models/userModel.js';
+import LocalStrategy from 'passport-local';
+import dotenv from 'dotenv';
+import { program } from 'commander';
+import config from './config.js';
 
 
-const app = express(); // Crear la instancia de Express
-const httpServer = http.createServer(app); // Crear el servidor HTTP
-const io = new Server(httpServer); // Crear la instancia de Socket.IO
+program.option('--mode <mode>', 'Especificar el modo (development o production)').parse(process.argv);
+const options = program.opts();
+const mode = options.mode || 'development';
+
+// Usa este valor para cargar el archivo .env correspondiente
+if (mode === 'development') {
+  dotenv.config({ path: '.env.development' });
+} else if (mode === 'production') {
+  dotenv.config({ path: '.env.production' });
+} else {
+  console.error('Modo no válido. Debes usar "development" o "production".');
+  process.exit(1);
+}
+
+const app = express();
+const httpServer = http.createServer(app);
+const io = new Server(httpServer);
 
 // Conectar a la base de datos MongoDB
-mongoose.connect('mongodb+srv://benjalorenzo96:Benjam96@codercluster.8hfnnf7.mongodb.net/?retryWrites=true&w=majority', {
+mongoose.connect(config.databaseConnectionString, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -38,8 +55,8 @@ db.once('open', () => {
 app.engine(
   'handlebars',
   exphbs({
-    extname: '.handlebars', // Extensión de los archivos de plantilla
-    defaultLayout: 'main', // Layout por defecto
+    extname: '.handlebars',
+    defaultLayout: 'main',
   })
 );
 app.set('view engine', 'handlebars');
@@ -50,7 +67,7 @@ app.use(express.urlencoded({ extended: true }));
 // Configurar express-session
 app.use(
   session({
-    secret: 'tu-secreto', // Cambia esto a una cadena segura
+    secret: config.secretKey,
     resave: false,
     saveUninitialized: false,
   })
@@ -65,23 +82,18 @@ passport.use(
     },
     async (email, password, done) => {
       try {
-        // Buscar al usuario en la base de datos por su correo electrónico
         const user = await User.findOne({ email });
 
-        // Si no se encuentra el usuario, devolver un mensaje de error
         if (!user) {
           return done(null, false, { message: 'Usuario no encontrado' });
         }
 
-        // Verificar la contraseña
         const passwordMatch = await bcrypt.compare(password, user.password);
 
-        // Si la contraseña no coincide, devolver un mensaje de error
         if (!passwordMatch) {
           return done(null, false, { message: 'Contraseña incorrecta' });
         }
 
-        // Si las credenciales son válidas, devolver el usuario autenticado
         return done(null, user);
       } catch (error) {
         return done(error);
@@ -89,24 +101,23 @@ passport.use(
     }
   )
 );
+
 // Configurar Passport para la autenticación de GitHub
 passport.use(
   new GitHubStrategy(
     {
-      clientID: 'Iv1.f832426aac67f628', // Reemplaza con tu Client ID de GitHub
-      clientSecret: '397af14ae92d316d3f6e93c3e192604f0732c0bb', // Reemplaza con tu Client Secret de GitHub
-      callbackURL: 'http://localhost:8080/api/sessions/github/callback', // Reemplaza con la URL correcta
+      clientID: config.githubClientID,
+      clientSecret: config.githubClientSecret,
+      callbackURL: 'http://localhost:8080/api/sessions/github/callback',
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        // Verificar si el usuario ya existe en la base de datos
         const existingUser = await User.findOne({ githubId: profile.id });
 
         if (existingUser) {
           return done(null, existingUser);
         }
 
-        // Si no existe, crea un nuevo usuario con la información de GitHub
         const newUser = new User({
           username: profile.username,
           githubId: profile.id,
@@ -122,7 +133,6 @@ passport.use(
   )
 );
 
-
 // Configuración de Passport para serialización y deserialización de usuarios
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -137,23 +147,22 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-// Ruta para la autenticación de GitHub
 app.get('/auth/github', passport.authenticate('github'));
 
 app.get(
   '/auth/github/callback',
   passport.authenticate('github', {
-    successRedirect: '/products', // Redirige a la vista de productos después de la autenticación
-    failureRedirect: '/login', // Redirige al formulario de inicio de sesión en caso de error
+    successRedirect: '/products',
+    failureRedirect: '/login',
   })
 );
-app.use(passport.initialize()); // Inicializa Passport
-app.use(passport.session()); // Habilita la persistencia de sesiones de Passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/api/users', usersRouter);
 app.use('/api/pets', petsRouter);
-app.use('/api/sessions', sessionsRouter); // Agrega el router de sesiones
-app.use('/', viewsRouter); // Agrega el router de vistas en la ruta base
+app.use('/api/sessions', sessionsRouter);
+app.use('/', viewsRouter);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

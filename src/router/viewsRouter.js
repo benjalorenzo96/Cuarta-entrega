@@ -1,5 +1,5 @@
 import express from 'express';
-import User from '../../dao/models/userModel.js'; // Asegúrate de importar tu modelo de usuario
+import viewsController from '../controllers/viewsController.js';
 
 const viewsRouter = express.Router();
 
@@ -15,22 +15,13 @@ function isAuthenticated(req, res, next) {
 }
 
 // Ruta para el formulario de registro
-viewsRouter.get('/register', (req, res) => {
-  res.render('register'); // Renderiza el formulario de registro
-});
+viewsRouter.get('/register', viewsController.renderRegisterView);
 
 // Ruta para el formulario de inicio de sesión
-viewsRouter.get('/login', (req, res) => {
-  res.render('login'); // Renderiza el formulario de inicio de sesión
-});
+viewsRouter.get('/login', viewsController.renderLoginView);
 
 // Ruta para la vista de productos (requiere autenticación)
-viewsRouter.get('/products', isAuthenticated, (req, res) => {
-  const user = req.session.user; // El usuario autenticado está en la sesión
-  const products = []; // Aquí debes obtener la lista de productos, probablemente desde tu base de datos
-
-  res.render('products', { user, products }); // Renderiza la vista de productos con los datos del usuario y productos
-});
-
+viewsRouter.get('/products', isAuthenticated, viewsController.renderProductsView);
 
 export default viewsRouter;
+
