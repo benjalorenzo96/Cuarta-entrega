@@ -1,4 +1,6 @@
-import Product from '../dao/models/productModel';
+// controllers/productsController.js
+import ProductDTO from '../dao/productDTO.js'; // Importamos el DTO
+import ProductDAO from '../dao/productDAO.js'; // Importamos el DAO
 
 const productsController = {
   getProducts: async (req, res) => {
@@ -28,16 +30,25 @@ const productsController = {
     }
 
     try {
-      const totalProducts = await Product.countDocuments(filter);
+      const totalProducts = await ProductDAO.getTotalProducts(filter);
       const totalPages = Math.ceil(totalProducts / limit);
-      const products = await Product.find(filter)
-        .sort(sortOptions)
-        .skip(skip)
-        .limit(parseInt(limit));
+      const products = await ProductDAO.getProducts(filter, skip, parseInt(limit), sortOptions);
+
+      // Utilizamos el DTO aquí para formatear los productos
+      const productDTOs = products.map((product) =>
+        new ProductDTO(
+          product._id,
+          product.title,
+          product.price,
+          product.category,
+          product.availability,
+          product.stock
+        )
+      );
 
       const result = {
         status: 'success',
-        payload: products,
+        payload: productDTOs,
         totalPages: totalPages,
         prevPage: page > 1 ? page - 1 : null,
         nextPage: page < totalPages ? page + 1 : null,
@@ -50,6 +61,7 @@ const productsController = {
 
       res.json(result);
     } catch (error) {
+      console.error(error);
       res.status(500).json({ error: 'Error al obtener productos' });
     }
   },
@@ -57,4 +69,5 @@ const productsController = {
   // Puedes agregar otras funciones relacionadas con productos aquí si es necesario
 };
 
-export default productsController;
+export { productsController };
+

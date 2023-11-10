@@ -1,3 +1,5 @@
+// controllers/sessionsController.js
+
 import passport from 'passport';
 import bcrypt from 'bcrypt';
 import User from '../dao/models/userModel.js';
@@ -58,6 +60,18 @@ const sessionsController = {
     successRedirect: '/products',
     failureRedirect: '/login',
   }),
+
+  // Nueva ruta para obtener el usuario actual
+  getCurrentUser: (req, res) => {
+    // Aquí obtén la información necesaria del usuario
+    const currentUserDTO = {
+      username: req.user.username,
+      role: req.user.role,
+    };
+
+    res.json(currentUserDTO);
+  },
 };
 
 export default sessionsController;
+

@@ -1,5 +1,7 @@
+// routes/cartsRouter.js
+
 import express from 'express';
-import cartsController from '../controllers/cartsController.js';
+import { cartsController } from '../controllers/cartsController.js'; // Asegúrate de importar el controlador actualizado
 
 const cartsRouter = express.Router();
 
@@ -18,6 +20,10 @@ cartsRouter.put('/:cid/products/:pid', cartsController.updateProductQuantity);
 // DELETE /api/carts/:cid para eliminar todos los productos del carrito
 cartsRouter.delete('/:cid', cartsController.deleteCart);
 
+// POST /api/carts/:cid/purchase para finalizar el proceso de compra del carrito
+cartsRouter.post('/:cid/purchase', cartsController.purchaseCart);
+
 export default cartsRouter;
+
 
 

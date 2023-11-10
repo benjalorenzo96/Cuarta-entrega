@@ -1,103 +1,68 @@
 import Cart from '../dao/models/cartsModel.js';
+import Ticket from '../dao/models/ticketModel.js';
 
 const cartsController = {
-  getCartById: async (req, res) => {
-    const cartId = req.params.cid;
-    try {
-      const cart = await Cart.findById(cartId).populate('products.product', 'title price');
-      if (cart) {
-        res.json(cart);
-      } else {
-        res.status(404).json({ error: 'Carrito no encontrado' });
-      }
-    } catch (error) {
-      res.status(500).json({ error: 'Error al obtener carrito' });
-    }
-  },
+  // ... (otros métodos)
 
-  deleteProductFromCart: async (req, res) => {
+  purchaseCart: async (req, res) => {
     const cartId = req.params.cid;
-    const productId = req.params.pid;
 
     try {
-      const cart = await Cart.findById(cartId);
+      const cart = await Cart.findById(cartId).populate('products.product');
 
       if (!cart) {
         return res.status(404).json({ error: 'Carrito no encontrado' });
       }
 
-      const productIndex = cart.products.findIndex((p) => p.product.toString() === productId);
+      const productsToPurchase = [];
+      const productsNotPurchased = [];
 
-      if (productIndex === -1) {
-        return res.status(404).json({ error: 'Producto no encontrado en el carrito' });
+      for (const cartProduct of cart.products) {
+        const { product, quantity } = cartProduct;
+        const availableStock = product.stock;
+
+        if (quantity <= availableStock) {
+          product.stock -= quantity;
+          await product.save();
+
+          productsToPurchase.push({ product, quantity });
+        } else {
+          productsNotPurchased.push(product._id);
+        }
       }
 
-      cart.products.splice(productIndex, 1);
+      const purchaseDatetime = new Date();
+      const amount = productsToPurchase.reduce((total, cartProduct) => {
+        return total + cartProduct.product.price * cartProduct.quantity;
+      }, 0);
+
+      const ticket = new Ticket({
+        code: generateUniqueCode(),
+        purchase_datetime: purchaseDatetime,
+        amount: amount,
+        purchaser: req.user.email,
+        products: productsToPurchase,
+      });
+
+      await ticket.save();
+
+      cart.products = cart.products.filter(
+        (cartProduct) => !productsNotPurchased.includes(cartProduct.product._id)
+      );
       await cart.save();
 
-      res.status(204).end();
+      res.status(200).json({ message: 'Compra completada', productsNotPurchased });
     } catch (error) {
-      res.status(500).json({ error: 'Error al eliminar producto del carrito' });
+      console.error(error);
+      res.status(500).json({ error: 'Error al procesar la compra del carrito' });
     }
   },
 
-  updateCart: async (req, res) => {
-    const cartId = req.params.cid;
-    const productsToUpdate = req.body.products;
-
-    try {
-      const cart = await Cart.findById(cartId);
-
-      if (!cart) {
-        return res.status(404).json({ error: 'Carrito no encontrado' });
-      }
-
-      cart.products = productsToUpdate;
-      await cart.save();
-
-      res.json(cart);
-    } catch (error) {
-      res.status(500).json({ error: 'Error al actualizar el carrito' });
-    }
-  },
-
-  updateProductQuantity: async (req, res) => {
-    const cartId = req.params.cid;
-    const productId = req.params.pid;
-    const quantity = req.body.quantity;
-
-    try {
-      const cart = await Cart.findById(cartId);
-
-      if (!cart) {
-        return res.status(404).json({ error: 'Carrito no encontrado' });
-      }
-
-      const product = cart.products.find((p) => p.product.toString() === productId);
-
-      if (!product) {
-        return res.status(404).json({ error: 'Producto no encontrado en el carrito' });
-      }
-
-      product.quantity = quantity;
-      await cart.save();
-
-      res.json(cart);
-    } catch (error) {
-      res.status(500).json({ error: 'Error al actualizar la cantidad del producto en el carrito' });
-    }
-  },
-
-  deleteCart: async (req, res) => {
-    const cartId = req.params.cid;
-
-    try {
-      await Cart.findByIdAndDelete(cartId);
-      res.status(204).end();
-    } catch (error) {
-      res.status(500).json({ error: 'Error al eliminar carrito' });
-    }
-  },
+  // ... (otros métodos)
 };
+
+function generateUniqueCode() {
+  return Math.random().toString(36).substr(2, 9);
+}
 
 export default cartsController;
