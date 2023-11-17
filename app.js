@@ -17,8 +17,11 @@ import User from './src/dao/models/userModel.js';
 import LocalStrategy from 'passport-local';
 import dotenv from 'dotenv';
 import { program } from 'commander';
+import nodemailer from 'nodemailer';
+import twilio from 'twilio';
+import { generateMockProducts } from './mocking.js';
+import { errorHandler } from './errorHandler.js';
 import config from './config.js';
-
 
 program.option('--mode <mode>', 'Especificar el modo (development o production)').parse(process.argv);
 const options = program.opts();
@@ -195,9 +198,96 @@ app.get('/', (req, res) => {
   res.render('login'); // Renderiza el formulario de inicio de sesión
 });
 
+// Configura nodemailer con tus credenciales de Gmail
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'benjalorenzo96@gmail.com',
+    pass: 'wvno jmxr rmyj xppl',
+  },
+});
+
+// Configura Twilio con tus credenciales
+const twilioClient = twilio(config.TWILIO_ACCOUNT_SID, config.TWILIO_AUTH_TOKEN);
+
+// Ruta para probar el envío de correos con nodemailer
+app.post('/mail', async (req, res) => {
+  try {
+    // Datos del correo
+    const mailOptions = {
+      from: 'benjalorenzo96@gmail.com',
+      to: 'destinatario@gmail.com',
+      subject: 'Asunto del correo',
+      html: '<p>Contenido del correo con <b>formato HTML</b></p>',
+      attachments: [
+        {
+          filename: 'imagen.png',
+          path: '/ruta/a/la/imagen.png',
+          cid: 'uniqueId1', // Asocia este CID en el cuerpo del HTML para mostrar la imagen
+        },
+        // Puedes agregar más attachments según sea necesario
+      ],
+    };
+
+    // Envía el correo
+    const info = await transporter.sendMail(mailOptions);
+
+    // Muestra información de éxito en la consola
+    console.log('Correo enviado:', info);
+
+    // Responde al cliente con un mensaje de éxito
+    res.status(200).json({ message: 'Correo enviado exitosamente' });
+  } catch (error) {
+    console.error('Error al enviar el correo:', error);
+
+    // Responde al cliente con un mensaje de error
+    res.status(500).json({ error: 'Error al enviar el correo' });
+  }
+});
+
+// Ruta para probar el envío de mensajes SMS con Twilio
+app.post('/sms', async (req, res) => {
+  try {
+    // Datos del mensaje SMS
+    const { to, body } = req.body;
+
+    // Envía el mensaje SMS con Twilio
+    const message = await twilioClient.messages.create({
+      body,
+      from: config.TWILIO_NUMBER,
+      to,
+    });
+
+    // Muestra información de éxito en la consola
+    console.log('Mensaje SMS enviado:', message);
+
+    // Responde al cliente con un mensaje de éxito
+    res.status(200).json({ message: 'Mensaje SMS enviado exitosamente' });
+  } catch (error) {
+    console.error('Error al enviar el mensaje SMS:', error);
+
+    // Responde al cliente con un mensaje de error
+    res.status(500).json({ error: 'Error al enviar el mensaje SMS' });
+  }
+});
+// Ruta para generar productos de manera ficticia (mocking)
+app.get('/mockingproducts', (req, res) => {
+  const mockProducts = generateMockProducts();
+  res.json(mockProducts);
+});
+
+// Ejemplo de uso del manejador de errores
+app.get('/example-error', (req, res, next) => {
+  const error = errorHandler('productNotFound');
+  next(error);
+});
+
+// Middleware para manejar errores
+app.use((err, req, res, next) => {
+  res.status(err.statusCode || 500).json({ error: err.message });
+});
 // Resto de tus rutas y código existente
 
 export { app, httpServer, io };
-
 
 
