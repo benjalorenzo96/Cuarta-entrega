@@ -21,6 +21,7 @@ import nodemailer from 'nodemailer';
 import twilio from 'twilio';
 import { generateMockProducts } from './mocking.js';
 import { errorHandler } from './errorHandler.js';
+import { developmentLogger, productionLogger } from './logger.js';
 import config from './config.js';
 
 program.option('--mode <mode>', 'Especificar el modo (development o production)').parse(process.argv);
@@ -40,6 +41,21 @@ if (mode === 'development') {
 const app = express();
 const httpServer = http.createServer(app);
 const io = new Server(httpServer);
+
+// Configurar el logger para el entorno
+const logger = process.env.NODE_ENV === 'production' ? productionLogger : developmentLogger;
+
+app.get('/loggerTest', (req, res) => {
+  // Ejemplos de logs
+  logger.debug('Este es un mensaje de debug');
+  logger.http('Este es un mensaje HTTP');
+  logger.info('Este es un mensaje de info');
+  logger.warning('Este es un mensaje de advertencia');
+  logger.error('Este es un mensaje de error');
+  logger.fatal('Este es un mensaje fatal');
+
+  res.send('Logs enviados a la consola y archivo (si corresponde).');
+});
 
 // Conectar a la base de datos MongoDB
 mongoose.connect(config.databaseConnectionString, {
@@ -284,9 +300,11 @@ app.get('/example-error', (req, res, next) => {
 
 // Middleware para manejar errores
 app.use((err, req, res, next) => {
+  // Log de errores utilizando el logger
+  logger.error(`Error: ${err.message}`, { error: err });
+
   res.status(err.statusCode || 500).json({ error: err.message });
 });
-// Resto de tus rutas y código existente
 
 export { app, httpServer, io };
 
