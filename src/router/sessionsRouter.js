@@ -1,5 +1,7 @@
 import express from 'express';
 import sessionsController from '../controllers/sessionsController.js';
+import passwordResetController from '../controllers/passwordResetController.js'; // Importa el nuevo controlador
+
 
 const sessionsRouter = express.Router();
 
@@ -17,6 +19,13 @@ sessionsRouter.get('/github', sessionsController.authenticateGitHub);
 
 // Ruta de retorno de GitHub después de la autenticación
 sessionsRouter.get('/github/callback', sessionsController.handleGitHubCallback);
+
+// Ruta para solicitar restablecimiento de contraseña
+sessionsRouter.post('/forgot-password', passwordResetController.requestPasswordReset);
+
+// Ruta para restablecer contraseña
+sessionsRouter.post('/reset-password', passwordResetController.resetPassword);
+
 
 export default sessionsRouter;
 

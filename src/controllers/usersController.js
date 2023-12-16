@@ -30,6 +30,30 @@ const usersController = {
       res.status(500).json({ error: 'Error al crear el usuario' });
     }
   },
+  changeUserRole: async (req, res) => {
+    const userId = req.params.uid;
+    const { role } = req.body;
+
+    try {
+      const user = await User.findById(userId);
+
+      if (!user) {
+        return res.status(404).json({ error: 'Usuario no encontrado' });
+      }
+
+      if (role !== 'user' && role !== 'premium') {
+        return res.status(400).json({ error: 'Rol no válido' });
+      }
+
+      user.role = role;
+      await user.save();
+
+      res.status(200).json({ message: 'Rol de usuario cambiado exitosamente', user });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al cambiar el rol de usuario' });
+    }
+  },
 };
 
 export default usersController;

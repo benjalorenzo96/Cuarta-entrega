@@ -57,7 +57,49 @@ const cartsController = {
       res.status(500).json({ error: 'Error al procesar la compra del carrito' });
     }
   },
+  addToCart: async (req, res) => {
+    const productId = req.params.pid;
+    const quantity = parseInt(req.body.quantity);
 
+    try {
+      const product = await ProductDAO.getProductById(productId);
+
+      // Verificar si el producto pertenece al usuario actual
+      if (req.user.role === 'premium' && product.owner === req.user.email) {
+        return res.status(403).json({ error: 'No puedes agregar a tu carrito un producto que te pertenece' });
+      }
+
+      // Lógica para agregar el producto al carrito
+      // ... (código existente)
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al agregar el producto al carrito' });
+    }
+  },
+
+  purchaseCart: async (req, res) => {
+    const cartId = req.params.cid;
+
+    try {
+      const cart = await Cart.findById(cartId).populate('products.product');
+
+      if (!cart) {
+        return res.status(404).json({ error: 'Carrito no encontrado' });
+      }
+
+      // Verificar si algún producto del carrito pertenece al usuario actual
+      const productsBelongingToUser = cart.products.some((cartProduct) => cartProduct.product.owner === req.user.email);
+      if (req.user.role === 'premium' && productsBelongingToUser) {
+        return res.status(403).json({ error: 'No puedes comprar un carrito que contiene productos que te pertenecen' });
+      }
+
+      // Lógica para procesar la compra del carrito
+      // ... (código existente)
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al procesar la compra del carrito' });
+    }
+  },
   // ... (otros métodos)
 };
 

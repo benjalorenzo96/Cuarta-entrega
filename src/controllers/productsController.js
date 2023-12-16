@@ -65,7 +65,27 @@ const productsController = {
       res.status(500).json({ error: 'Error al obtener productos' });
     }
   },
+  deleteProduct: async (req, res) => {
+    const productId = req.params.id;
 
+    try {
+      // Obtener el producto para verificar el propietario
+      const product = await ProductDAO.getProductById(productId);
+
+      // Verificar si el usuario actual es admin o el propietario del producto
+      if (req.user.role === 'admin' || (req.user.role === 'premium' && product.owner === req.user.email)) {
+        // Eliminar el producto
+        await ProductDAO.deleteProduct(productId);
+
+        res.json({ status: 'success', message: 'Producto eliminado correctamente' });
+      } else {
+        res.status(403).json({ error: 'No tienes permisos para eliminar este producto' });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al eliminar el producto' });
+    }
+  },
   // Puedes agregar otras funciones relacionadas con productos aquí si es necesario
 };
 
