@@ -2,13 +2,44 @@ import ProductDTO from '../dao/productDTO.js'; // Importamos el DTO
 import ProductDAO from '../dao/productDAO.js'; // Importamos el DAO
 
 /**
+ * @typedef ProductDTO
+ * @property {string} _id - ID del producto.
+ * @property {string} title - Título del producto.
+ * @property {number} price - Precio del producto.
+ * @property {string} category - Categoría del producto.
+ * @property {boolean} availability - Disponibilidad del producto.
+ * @property {number} stock - Cantidad disponible en stock.
+ */
+
+/**
+ * @typedef ProductsResponse
+ * @property {string} status - Estado de la respuesta.
+ * @property {Array.<ProductDTO>} payload - Lista de productos.
+ * @property {number} totalPages - Número total de páginas.
+ * @property {number|null} prevPage - Página anterior.
+ * @property {number|null} nextPage - Página siguiente.
+ * @property {number} page - Página actual.
+ * @property {boolean} hasPrevPage - Indica si hay una página anterior.
+ * @property {boolean} hasNextPage - Indica si hay una página siguiente.
+ * @property {string|null} prevLink - Enlace a la página anterior.
+ * @property {string|null} nextLink - Enlace a la página siguiente.
+ */
+
+/**
  * Obtiene la lista de productos.
  * @route GET /api/products
  * @group Productos - Operaciones relacionadas con productos
- * @returns {Array.<ProductDTO>} 200 - Lista de productos.
+ * @param {number} [limit=10] - Límite de productos por página.
+ * @param {number} [page=1] - Número de página.
+ * @param {string} [sort] - Orden de los resultados (asc/desc).
+ * @param {string} [query] - Término de búsqueda.
+ * @param {string} [category] - Categoría de productos.
+ * @param {string} [availability] - Disponibilidad de productos (true/false).
+ * @returns {ProductsResponse} 200 - Lista de productos.
  * @throws {500} - Error al obtener productos.
  * @description Obtiene la lista de productos disponibles.
  */
+
 const productsController = {
   getProducts: async (req, res) => {
     // Extraer parámetros de la consulta
@@ -78,6 +109,17 @@ const productsController = {
       res.status(500).json({ error: 'Error al obtener productos' });
     }
   },
+
+ /**
+   * Elimina un producto por su ID.
+   * @route DELETE /api/products/{id}
+   * @group Productos - Operaciones relacionadas con productos
+   * @param {string} id.path.required - ID del producto a eliminar.
+   * @returns {Object} 200 - Confirmación de eliminación.
+   * @throws {403} - No tienes permisos para eliminar este producto.
+   * @throws {500} - Error al eliminar el producto.
+   * @description Elimina un producto por su ID.
+   */
 
   deleteProduct: async (req, res) => {
     const productId = req.params.id;
