@@ -19,10 +19,12 @@ import dotenv from 'dotenv';
 import { program } from 'commander';
 import nodemailer from 'nodemailer';
 import twilio from 'twilio';
-import { generateMockProducts } from './mocking.js';
-import { errorHandler } from './errorHandler.js';
-import { developmentLogger, productionLogger } from './logger.js';
+import { generateMockProducts } from './src/testingutils/mocking.js';
+import { errorHandler } from './src/testingutils/errorHandler.js';
+import { developmentLogger, productionLogger } from './src/testingutils/logger.js';
 import config from './config.js';
+import swagger from './swagger.js';
+
 
 program.option('--mode <mode>', 'Especificar el modo (development o production)').parse(process.argv);
 const options = program.opts();
@@ -41,6 +43,13 @@ if (mode === 'development') {
 const app = express();
 const httpServer = http.createServer(app);
 const io = new Server(httpServer);
+
+swagger(app); // Configuración de Swagger
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en el puerto ${PORT}`);
+});
 
 // Configurar el logger para el entorno
 const logger = process.env.NODE_ENV === 'production' ? productionLogger : developmentLogger;

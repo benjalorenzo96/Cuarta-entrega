@@ -1,6 +1,15 @@
 import Cart from '../dao/models/cartsModel.js';
 import Ticket from '../dao/models/ticketModel.js';
-
+/**
+ * Realiza la compra del carrito.
+ * @route POST /api/carts/:cid/purchase
+ * @group Carrito - Operaciones relacionadas con carritos
+ * @param {string} cid.path.required - ID del carrito.
+ * @returns {object} 200 - Resultado de la compra.
+ * @throws {404} - Carrito no encontrado.
+ * @throws {500} - Error al procesar la compra del carrito.
+ * @description Realiza la compra de los productos en el carrito.
+ */
 const cartsController = {
   // ... (otros métodos)
 

@@ -192,7 +192,7 @@ cartsRouter.post('/:cid/product/:pid', async (req, res) => {
 app.use('/api/carts', cartsRouter);
 
 
-const PORT = 8080;
+const PORT = 3000;
 httpServer.listen(PORT, () => {
   console.log(`Servidor Express y WebSocket escuchando en el puerto ${PORT}`);
 });

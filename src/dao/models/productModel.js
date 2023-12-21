@@ -1,4 +1,15 @@
+// models/productModel.js
 import mongoose from 'mongoose';
+
+/**
+ * @typedef Product
+ * @property {string} title - Título del producto.
+ * @property {string} description - Descripción del producto.
+ * @property {number} price - Precio del producto.
+ * @property {string} thumbnail - URL de la imagen del producto.
+ * @property {string} code - Código único del producto.
+ * @property {number} stock - Cantidad disponible en stock.
+ */
 
 const productSchema = new mongoose.Schema({
   title: String,
@@ -7,14 +18,10 @@ const productSchema = new mongoose.Schema({
   thumbnail: String,
   code: String,
   stock: Number,
-  owner: {
-    type: String, 
-    ref: 'User', // Referencia al modelo de usuarios
-    default: 'admin', // Establezco 'admin' como valor por defecto
-  },
 });
 
 const Product = mongoose.model('Product', productSchema);
 
 export default Product;
+
 

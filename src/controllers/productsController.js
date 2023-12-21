@@ -2,6 +2,15 @@
 import ProductDTO from '../dao/productDTO.js'; // Importamos el DTO
 import ProductDAO from '../dao/productDAO.js'; // Importamos el DAO
 
+/**
+ * Obtiene la lista de productos.
+ * @route GET /api/products
+ * @group Productos - Operaciones relacionadas con productos
+ * @returns {Array.<ProductDTO>} 200 - Lista de productos.
+ * @throws {500} - Error al obtener productos.
+ * @description Obtiene la lista de productos disponibles.
+ */
+
 const productsController = {
   getProducts: async (req, res) => {
     const { limit = 10, page = 1, sort, query, category, availability } = req.query;
