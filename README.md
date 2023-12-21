@@ -1,6 +1,6 @@
 # Proyecto Coderhoues - Programación Backend
 
-Este proyecyo corresponde al curso de Programación Backend de la Carrera de Desarrollo Full Stack que ofrece Coderhouse.
+Este proyecto corresponde al curso de Programación Backend de la Carrera de Desarrollo Full Stack que ofrece Coderhouse.
 
 ## Variables de Entorno
 
