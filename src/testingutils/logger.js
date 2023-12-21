@@ -1,4 +1,3 @@
-// logger.js
 import winston from 'winston';
 
 // Definir niveles de log y colores correspondientes
@@ -25,6 +24,7 @@ const developmentLogger = winston.createLogger({
   levels: logLevels,
   format: winston.format.simple(),
   transports: [
+    // Utiliza la consola para mostrar logs durante el desarrollo
     new winston.transports.Console({
       format: winston.format.combine(
         winston.format.colorize(),
@@ -39,15 +39,18 @@ const productionLogger = winston.createLogger({
   levels: logLevels,
   format: winston.format.simple(),
   transports: [
+    // Utiliza la consola para mostrar logs de info o superior en producción
     new winston.transports.Console({
-      level: 'info', // Solo mostrará logs de info o superior en producción
+      level: 'info',
       format: winston.format.combine(
         winston.format.colorize(),
         winston.format.simple()
       ),
     }),
+    // Utiliza un archivo para almacenar logs de nivel error en producción
     new winston.transports.File({ filename: 'errors.log', level: 'error' }),
   ],
 });
 
 export { developmentLogger, productionLogger };
+

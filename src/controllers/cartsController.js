@@ -1,44 +1,14 @@
 import Cart from '../dao/models/cartsModel.js';
 import Ticket from '../dao/models/ticketModel.js';
-/**
- * Realiza la compra del carrito.
- * @route POST /api/carts/:cid/purchase
- * @group Carrito - Operaciones relacionadas con carritos
- * @param {string} cid.path.required - ID del carrito.
- * @returns {object} 200 - Resultado de la compra.
- * @throws {404} - Carrito no encontrado.
- * @throws {500} - Error al procesar la compra del carrito.
- * @description Realiza la compra de los productos en el carrito.
- */
-const cartsController = {
-  // ... (otros métodos)
+import ProductDAO from '../dao/productDAO.js';
+import { processCart, generateUniqueCode } from '../services/cartService.js';
 
+const cartsController = {
   purchaseCart: async (req, res) => {
     const cartId = req.params.cid;
 
     try {
-      const cart = await Cart.findById(cartId).populate('products.product');
-
-      if (!cart) {
-        return res.status(404).json({ error: 'Carrito no encontrado' });
-      }
-
-      const productsToPurchase = [];
-      const productsNotPurchased = [];
-
-      for (const cartProduct of cart.products) {
-        const { product, quantity } = cartProduct;
-        const availableStock = product.stock;
-
-        if (quantity <= availableStock) {
-          product.stock -= quantity;
-          await product.save();
-
-          productsToPurchase.push({ product, quantity });
-        } else {
-          productsNotPurchased.push(product._id);
-        }
-      }
+      const { productsToPurchase, productsNotPurchased } = await processCart(cartId, req.user.email);
 
       const purchaseDatetime = new Date();
       const amount = productsToPurchase.reduce((total, cartProduct) => {
@@ -55,10 +25,13 @@ const cartsController = {
 
       await ticket.save();
 
-      cart.products = cart.products.filter(
-        (cartProduct) => !productsNotPurchased.includes(cartProduct.product._id)
-      );
-      await cart.save();
+      // Verificar si algún producto del carrito pertenece al usuario actual
+      const productsBelongingToUser = await checkProductsBelongingToUser(cartId, req.user.email);
+      if (req.user.role === 'premium' && productsBelongingToUser) {
+        return res.status(403).json({ error: 'No puedes comprar un carrito que contiene productos que te pertenecen' });
+      }
+
+      await removeProductsFromCart(cartId, productsNotPurchased);
 
       res.status(200).json({ message: 'Compra completada', productsNotPurchased });
     } catch (error) {
@@ -66,6 +39,7 @@ const cartsController = {
       res.status(500).json({ error: 'Error al procesar la compra del carrito' });
     }
   },
+
   addToCart: async (req, res) => {
     const productId = req.params.pid;
     const quantity = parseInt(req.body.quantity);
@@ -78,42 +52,19 @@ const cartsController = {
         return res.status(403).json({ error: 'No puedes agregar a tu carrito un producto que te pertenece' });
       }
 
-      // Lógica para agregar el producto al carrito
-      // ... (código existente)
+      // Verificar si hay suficiente stock
+      if (quantity > product.stock) {
+        return res.status(400).json({ error: 'No hay suficiente stock disponible para agregar la cantidad solicitada' });
+      }
+
+      await updateCart(req.user.cartId, productId, quantity);
+
+      res.status(200).json({ message: 'Producto agregado al carrito exitosamente' });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Error al agregar el producto al carrito' });
     }
   },
-
-  purchaseCart: async (req, res) => {
-    const cartId = req.params.cid;
-
-    try {
-      const cart = await Cart.findById(cartId).populate('products.product');
-
-      if (!cart) {
-        return res.status(404).json({ error: 'Carrito no encontrado' });
-      }
-
-      // Verificar si algún producto del carrito pertenece al usuario actual
-      const productsBelongingToUser = cart.products.some((cartProduct) => cartProduct.product.owner === req.user.email);
-      if (req.user.role === 'premium' && productsBelongingToUser) {
-        return res.status(403).json({ error: 'No puedes comprar un carrito que contiene productos que te pertenecen' });
-      }
-
-      // Lógica para procesar la compra del carrito
-      // ... (código existente)
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Error al procesar la compra del carrito' });
-    }
-  },
-  // ... (otros métodos)
-};
-
-function generateUniqueCode() {
-  return Math.random().toString(36).substr(2, 9);
 }
 
 export default cartsController;

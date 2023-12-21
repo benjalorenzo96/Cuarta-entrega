@@ -1,4 +1,3 @@
-// controllers/productsController.js
 import ProductDTO from '../dao/productDTO.js'; // Importamos el DTO
 import ProductDAO from '../dao/productDAO.js'; // Importamos el DAO
 
@@ -10,17 +9,19 @@ import ProductDAO from '../dao/productDAO.js'; // Importamos el DAO
  * @throws {500} - Error al obtener productos.
  * @description Obtiene la lista de productos disponibles.
  */
-
 const productsController = {
   getProducts: async (req, res) => {
+    // Extraer parámetros de la consulta
     const { limit = 10, page = 1, sort, query, category, availability } = req.query;
     const skip = (page - 1) * limit;
     const sortOptions = {};
 
+    // Configurar opciones de ordenamiento si se proporciona 'asc' o 'desc'
     if (sort === 'asc' || sort === 'desc') {
       sortOptions.price = sort;
     }
 
+    // Configurar filtros de consulta
     const filter = {};
 
     if (category) {
@@ -39,11 +40,12 @@ const productsController = {
     }
 
     try {
+      // Obtener el total de productos y calcular el número total de páginas
       const totalProducts = await ProductDAO.getTotalProducts(filter);
       const totalPages = Math.ceil(totalProducts / limit);
-      const products = await ProductDAO.getProducts(filter, skip, parseInt(limit), sortOptions);
 
-      // Utilizamos el DTO aquí para formatear los productos
+      // Obtener productos paginados y aplicar el formato del DTO
+      const products = await ProductDAO.getProducts(filter, skip, parseInt(limit), sortOptions);
       const productDTOs = products.map((product) =>
         new ProductDTO(
           product._id,
@@ -55,6 +57,7 @@ const productsController = {
         )
       );
 
+      // Construir el objeto de respuesta paginada
       const result = {
         status: 'success',
         payload: productDTOs,
@@ -68,12 +71,14 @@ const productsController = {
         nextLink: page < totalPages ? `/api/products?limit=${limit}&page=${page + 1}` : null,
       };
 
+      // Enviar la respuesta JSON
       res.json(result);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Error al obtener productos' });
     }
   },
+
   deleteProduct: async (req, res) => {
     const productId = req.params.id;
 
@@ -99,4 +104,5 @@ const productsController = {
 };
 
 export { productsController };
+
 
