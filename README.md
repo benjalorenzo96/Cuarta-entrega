@@ -1,4 +1,4 @@
-# Proyecto Coderhoues - Programación Backend
+# Proyecto Coderhouse - Programación Backend
 
 Este proyecto corresponde al curso de Programación Backend de la Carrera de Desarrollo Full Stack que ofrece Coderhouse.
 
