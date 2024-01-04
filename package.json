@@ -41,6 +41,9 @@
   "description": "",
   "devDependencies": {
     "@types/express-handlebars": "^6.0.0",
+    "chai": "^5.0.0",
+    "mocha": "^10.2.0",
+    "supertest": "^6.3.3",
     "ts-node": "^10.9.1"
   }
 }

@@ -26,10 +26,8 @@ const sessionsController = {
         return res.status(400).json({ error: 'El correo electrónico ya está en uso.' });
       }
 
-      // Hashear la contraseña antes de almacenarla en la base de datos
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Crear un nuevo usuario con la contraseña hasheada
       const newUser = new User({
         first_name,
         last_name,
@@ -38,10 +36,10 @@ const sessionsController = {
         password: hashedPassword,
       });
 
-      // Guardar el nuevo usuario en la base de datos
       await newUser.save();
 
-      res.status(201).json(newUser);
+      // Redirige al usuario a la página de inicio de sesión después de un registro exitoso
+      res.redirect('/login');
     } catch (error) {
       res.status(500).json({ error: 'Error al registrar el usuario.' });
     }
@@ -67,7 +65,8 @@ const sessionsController = {
         if (err) {
           return next(err);
         }
-        res.json({ message: 'Sesión iniciada correctamente' });
+        // Redirige al usuario a la página de productos después del inicio de sesión exitoso
+        return res.redirect('/products');
       });
     })(req, res, next);
   },

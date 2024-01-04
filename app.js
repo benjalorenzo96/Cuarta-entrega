@@ -23,7 +23,7 @@ import { generateMockProducts } from './src/testingutils/mocking.js';
 import { errorHandler } from './src/testingutils/errorHandler.js';
 import { developmentLogger, productionLogger } from './src/testingutils/logger.js';
 import config from './config.js';
-import swagger from './swagger.js';
+import swagger from './docs/swagger.js';
 
 
 program.option('--mode <mode>', 'Especificar el modo (development o production)').parse(process.argv);
@@ -124,8 +124,7 @@ passport.use(
 
         return done(null, user);
       } catch (error) {
-        return done(error);
-      }
+e      }
     }
   )
 );
@@ -312,8 +311,15 @@ app.use((err, req, res, next) => {
   // Log de errores utilizando el logger
   logger.error(`Error: ${err.message}`, { error: err });
 
-  res.status(err.statusCode || 500).json({ error: err.message });
+  // Renderiza la vista de error correspondiente
+  res.status(err.statusCode || 500).render(`errors/${err.statusCode || 500}`, { error: err.message });
 });
+
+// Otro middleware para manejar errores 404 (página no encontrada)
+app.use((req, res, next) => {
+  res.status(404).render('errors/404', { url: req.originalUrl });
+});
+
 
 export { app, httpServer, io };
 
