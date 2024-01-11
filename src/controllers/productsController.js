@@ -1,5 +1,7 @@
 import ProductDTO from '../dao/productDTO.js'; // Importamos el DTO
 import ProductDAO from '../dao/productDAO.js'; // Importamos el DAO
+import { io } from '../app.js'; // Importa el objeto io de tu app.js
+
 
 /**
  * @typedef ProductDTO
@@ -142,7 +144,27 @@ const productsController = {
       res.status(500).json({ error: 'Error al eliminar el producto' });
     }
   },
-  // Puedes agregar otras funciones relacionadas con productos aquí si es necesario
+
+  createProduct: async (req, res) => {
+    try {
+      // Extraer datos del cuerpo de la solicitud
+      const { title, description, price, category, availability, stock } = req.body;
+
+      // Crear un objeto ProductDTO
+      const newProductDTO = new ProductDTO(title, description, price, category, availability, stock);
+
+      // Utilizar el modelo para crear un nuevo documento en la colección de productos
+      const createdProduct = await Product.create(newProductDTO);
+
+      // Emitir un evento a través de WebSocket para informar sobre la adición del nuevo producto
+      io.emit('productAdded', createdProduct);
+
+      res.status(201).json({ status: 'success', payload: createdProduct });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al crear el producto' });
+    }
+  },
 };
 
 export { productsController };

@@ -17,6 +17,9 @@ productsRouter.put('/:id', authorizeAdmin, productsController.updateProduct);
 // DELETE /api/products/:id (Solo accesible para el administrador)
 productsRouter.delete('/:id', authorizeAdmin, productsController.deleteProduct);
 
+// Ruta para crear un nuevo producto
+productsRouter.post('/', productsController.createProduct);
+
 export default productsRouter;
 
 

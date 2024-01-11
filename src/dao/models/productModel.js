@@ -18,6 +18,9 @@ const productSchema = new mongoose.Schema({
   thumbnail: String,
   code: String,
   stock: Number,
+  club: String,
+  league: String,
+  season: String,
 });
 
 const Product = mongoose.model('Product', productSchema);
