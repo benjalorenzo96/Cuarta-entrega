@@ -8,12 +8,11 @@ mongoose.connect(config.databaseConnectionString, {
     dbName: 'products',  // Agrega esta línea para especificar la base de datos
   });
   
-
-const db = mongoose.connection;
-
-db.on('error', console.error.bind(console, 'Error de conexión a MongoDB:'));
-db.once('open', async () => {
-  console.log('Conexión a MongoDB exitosa.');
+  const db = mongoose.connection;
+  
+  db.on('error', console.error.bind(console, 'Error de conexión a MongoDB:'));
+  db.once('open', async () => {
+    console.log('Conexión a MongoDB exitosa.');
 
   // Agregar productos (camisetas de fútbol)
   const footballShirts = [
