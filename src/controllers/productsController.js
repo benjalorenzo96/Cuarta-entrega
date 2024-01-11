@@ -86,7 +86,10 @@ const productsController = {
           product.price,
           product.category,
           product.availability,
-          product.stock
+          product.stock,
+          product.club,
+          product.league,
+          product.season,
         )
       );
 
