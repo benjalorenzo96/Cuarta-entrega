@@ -1,7 +1,22 @@
 <!-- home.handlebars -->
-<h1>Lista de Productos</h1>
-<ul>
-  {{#each products}}
-    <li>{{this.title}} - {{this.price}}</li>
-  {{/each}}
-</ul>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Productos</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="bg-gray-200">
+    <div class="container mx-auto my-6">
+        <h1 class="text-3xl font-semibold mb-6">Lista de Productos</h1>
+        <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {{#each products}}
+                <li class="bg-white p-4 shadow-md rounded-md">
+                    {{this.title}} - Precio: ${{this.price}}
+                </li>
+            {{/each}}
+        </ul>
+    </div>
+</body>
+</html>

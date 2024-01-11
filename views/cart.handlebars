@@ -1,24 +1,28 @@
+<!-- cart.handlebars -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Carrito de Compras</title>
-  <link rel="stylesheet" href="../styles.css">
-<body>
-  <h1>Carrito de Compras</h1>
-  <ul>
-    {{#each cart.products}}
-      <li>
-        <h2>{{this.product.title}}</h2>
-        <p>Precio: ${{this.product.price}}</p>
-        <p>Cantidad: {{this.quantity}}</p>
-        <button onclick="removeFromCart('{{this.product._id}}')">Eliminar</button>
-      </li>
-    {{/each}}
-  </ul>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="bg-gray-200">
+  <div class="container mx-auto my-6">
+    <h1 class="text-3xl font-semibold mb-6">Carrito de Compras</h1>
+    <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {{#each cart.products}}
+        <li class="bg-white p-4 shadow-md rounded-md">
+          <h2 class="text-xl font-semibold mb-2">{{this.product.title}}</h2>
+          <p class="text-gray-700">Precio: ${{this.product.price}}</p>
+          <p class="text-gray-700">Cantidad: {{this.quantity}}</p>
+          <button class="bg-red-500 text-white px-4 py-2 rounded-md mt-2" onclick="removeFromCart('{{this.product._id}}')">Eliminar</button>
+        </li>
+      {{/each}}
+    </ul>
 
-  <button onclick="checkout()">Pagar</button>
+    <button class="bg-green-500 text-white px-4 py-2 rounded-md mt-4" onclick="checkout()">Pagar</button>
+  </div>
 
   <script>
     // Función para eliminar un producto del carrito

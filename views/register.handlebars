@@ -1,30 +1,33 @@
+<!-- register.handlebars -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Usuario</title>
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="/styles.css">
 </head>
-<body>
-    <h1>Registro de Usuario</h1>
-    <form action="/api/sessions/register" method="POST">
-        <label for="first_name">Nombre:</label>
-        <input type="text" id="first_name" name="first_name" required><br>
+<body class="bg-gray-200">
+    <div class="container mx-auto my-6">
+        <h1 class="text-3xl font-semibold mb-6">Registro de Usuario</h1>
+        <form action="/api/sessions/register" method="POST" class="max-w-md bg-white p-6 rounded-md shadow-md">
+            <label for="first_name" class="block text-gray-700">Nombre:</label>
+            <input type="text" id="first_name" name="first_name" class="border rounded-md p-2 mb-2 w-full" required>
 
-        <label for="last_name">Apellido:</label>
-        <input type="text" id="last_name" name="last_name" required><br>
+            <label for="last_name" class="block text-gray-700">Apellido:</label>
+            <input type="text" id="last_name" name="last_name" class="border rounded-md p-2 mb-2 w-full" required>
 
-        <label for="email">Correo Electrónico:</label>
-        <input type="email" id="email" name="email" required><br>
+            <label for="email" class="block text-gray-700">Correo Electrónico:</label>
+            <input type="email" id="email" name="email" class="border rounded-md p-2 mb-2 w-full" required>
 
-        <label for="age">Edad:</label>
-        <input type="number" id="age" name="age" required><br>
+            <label for="age" class="block text-gray-700">Edad:</label>
+            <input type="number" id="age" name="age" class="border rounded-md p-2 mb-2 w-full" required>
 
-        <label for="password">Contraseña:</label>
-        <input type="password" id="password" name="password" required><br>
+            <label for="password" class="block text-gray-700">Contraseña:</label>
+            <input type="password" id="password" name="password" class="border rounded-md p-2 mb-4 w-full" required>
 
-        <button type="submit">Registrarse</button>
-    </form>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">Registrarse</button>
+        </form>
+    </div>
 </body>
 </html>

@@ -1,31 +1,32 @@
+<!-- chat.handlebars -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat</title>
-    <link rel="stylesheet" href="../styles.css">
+    <title>Chat en Vivo</title>
+    <link rel="stylesheet" href="/styles.css">
 </head>
 
-<body>
-    <h1>Chat en Vivo</h1>
+<body class="bg-gray-200">
+    <div class="container mx-auto my-6">
+        <h1 class="text-3xl font-semibold mb-6">Chat en Vivo</h1>
 
-    <!-- Mostrar mensajes anteriores -->
-    <div id="chat-messages">
-        {{#each messages}}
-        <div class="message">
-            <strong>{{this.user}}:</strong> {{this.message}}
+        <div id="chat-messages" class="mb-4">
+            {{#each messages}}
+                <div class="bg-white p-2 rounded-md mb-2">
+                    <strong>{{this.user}}:</strong> {{this.message}}
+                </div>
+            {{/each}}
         </div>
-        {{/each}}
-    </div>
 
-    <!-- Formulario para enviar mensajes -->
-    <form id="chat-form">
-        <input type="text" id="user" placeholder="Tu Nombre" required>
-        <input type="text" id="message" placeholder="Escribe un mensaje" required>
-        <button type="submit">Enviar</button>
-    </form>
+        <form id="chat-form" class="flex items-center">
+            <input type="text" id="user" placeholder="Tu Nombre" class="px-3 py-2 border rounded-md mr-2" required>
+            <input type="text" id="message" placeholder="Escribe un mensaje" class="px-3 py-2 border rounded-md mr-2" required>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">Enviar</button>
+        </form>
+    </div>
 
     <script>
         const chatForm = document.getElementById('chat-form');
