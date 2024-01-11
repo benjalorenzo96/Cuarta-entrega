@@ -7,6 +7,9 @@ class ProductDTO {
       this.category = category;
       this.availability = availability;
       this.stock = stock;
+      this.club = club;
+      this.league = league;
+      this.season = season;
     }
   }
   
