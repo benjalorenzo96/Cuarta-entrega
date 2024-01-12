@@ -26,6 +26,18 @@ const productService = {
     }
   },
 
+   renderProductsView: async (req, res) => {
+    try {
+      const user = req.session.user;
+      const products = await productService.getProducts(); // Obtener la lista de productos desde tu servicio
+
+      res.render('products', { user, products });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al obtener la lista de productos' });
+    }
+  },
+
   // Puedes agregar otras funciones relacionadas con productos aquí si es necesario
 };
 

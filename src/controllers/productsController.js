@@ -2,7 +2,6 @@ import ProductDTO from '../dao/productDTO.js'; // Importamos el DTO
 import ProductDAO from '../dao/productDAO.js'; // Importamos el DAO
 import { io } from '../app.js'; // Importa el objeto io de tu app.js
 
-
 /**
  * @typedef ProductDTO
  * @property {string} _id - ID del producto.

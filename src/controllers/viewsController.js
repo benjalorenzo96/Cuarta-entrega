@@ -1,6 +1,8 @@
 /**
  * Controlador de vistas que maneja las renderizaciones de las páginas.
  */
+import productService from '../services/productService.js';
+
 const viewsController = {
   /**
    * Renderiza la vista de registro.
@@ -25,13 +27,20 @@ const viewsController = {
    * @param {Object} req - Objeto de solicitud.
    * @param {Object} res - Objeto de respuesta.
    */
-  renderProductsView: (req, res) => {
-    // Obtiene el usuario de la sesión y una lista de productos (deberías obtenerla desde tu base de datos)
-    const user = req.session.user;
-    const products = []; // Aquí debes obtener la lista de productos, probablemente desde tu base de datos
+  renderProductsView: async (req, res) => {
+    try {
+      const user = req.session.user;
+      const products = await productService.getProducts(); // Obtener la lista de productos desde tu servicio
 
-    // Renderiza la vista de productos, pasando el usuario y la lista de productos como variables locales
-    res.render('products', { user, products });
+      res.render('products', { user, products });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al obtener la lista de productos' });
+    }
+  },
+
+  renderLoginButton: (req, res) => {
+    res.render('loginButton');
   },
 };
 

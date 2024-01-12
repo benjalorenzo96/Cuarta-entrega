@@ -219,7 +219,7 @@ app.get('/realtimeproducts', (req, res) => {
 
 // Ruta principal para mostrar el formulario de inicio de sesión
 app.get('/', (req, res) => {
-  res.render('login'); // Renderiza el formulario de inicio de sesión
+  res.render('products'); // Renderiza el formulario de inicio de sesión
 });
 
 // Configura nodemailer con tus credenciales de Gmail
