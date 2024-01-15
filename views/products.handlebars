@@ -13,16 +13,16 @@
         <p class="mb-4">Bienvenido, {{user.username}} (Rol: {{user.role}})</p>
         <a href="/login" class="bg-blue-500 text-white px-4 py-2 rounded-md">Iniciar Sesión</a>
         <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {{#each products}}
-                <li class="bg-white p-4 shadow-md rounded-md">
-                    <h2 class="text-xl font-semibold mb-2">{{this.title}}</h2>
-                    <p class="text-gray-700">Precio: ${{this.price}}</p>
-                    <p class="text-gray-700">Categoría: {{this.category}}</p>
-                    <p class="text-gray-700">Disponibilidad: {{this.availability}}</p>
-                    <button class="bg-green-500 text-white px-4 py-2 rounded-md mt-2" onclick="addToCart('{{this._id}}')">Agregar al carrito</button>
-                </li>
-            {{/each}}
-        </ul>
+    {{#each products}}
+        <li class="bg-white p-4 shadow-md rounded-md">
+            <h2 class="text-xl font-semibold mb-2">{{this.title}}</h2>
+            <p class="text-gray-700">Precio: ${{this.price}}</p>
+            <p class="text-gray-700">Categoría: {{this.category}}</p>
+            <p class="text-gray-700">Disponibilidad: {{this.availability}}</p>
+            <!-- Puedes agregar más detalles del producto aquí -->
+        </li>
+    {{/each}}
+</ul>
         <form action="/api/sessions/logout" method="POST" class="mt-4">
             <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-md">Cerrar Sesión</button>
         </form>

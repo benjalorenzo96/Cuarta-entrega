@@ -79,8 +79,12 @@ const sessionsController = {
    * @description Cierra la sesión de usuario actual.
    */
   logoutUser: (req, res) => {
+    // Actualizar last_connection al cerrar sesión
+    req.user.last_connection = Date.now();
+    req.user.save();
+
     req.logout();
-    res.json({ message: 'Sesión cerrada correctamente' });
+    res.redirect('/'); // Cambiado a res.redirect
   },
 
   /**
@@ -120,7 +124,40 @@ const sessionsController = {
 
     res.json(currentUserDTO);
   },
+
+  /**
+   * Controlador para realizar el seguimiento de la última conexión del usuario.
+   * @route POST /api/sessions/track-last-connection
+   * @group Sesiones - Operaciones relacionadas con la gestión de sesiones y usuarios
+   * @returns {Object} 200 - Mensaje de éxito y detalles actualizados del usuario.
+   * @throws {404} - Usuario no encontrado.
+   * @throws {500} - Error al realizar el seguimiento de la última conexión.
+   * @description Realiza el seguimiento de la última conexión del usuario.
+   */
+  trackLastConnection: async (req, res) => {
+    const userId = req.user.id;
+
+    try {
+      // Buscar el usuario por ID
+      const user = await User.findById(userId);
+
+      if (!user) {
+        return res.status(404).json({ error: 'Usuario no encontrado' });
+      }
+
+      // Actualizar last_connection al realizar el seguimiento
+      user.last_connection = Date.now();
+      await user.save();
+
+      // Responder con un mensaje de éxito y los detalles actualizados del usuario
+      res.status(200).json({ message: 'Seguimiento de última conexión realizado exitosamente', user });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al realizar el seguimiento de la última conexión' });
+    }
+  },
 };
 
 export default sessionsController;
+
 

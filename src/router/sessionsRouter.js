@@ -1,7 +1,6 @@
 import express from 'express';
 import sessionsController from '../controllers/sessionsController.js';
-import passwordResetController from '../controllers/passwordResetController.js'; // Importa el nuevo controlador
-
+import passwordResetController from '../controllers/passwordResetController.js';
 
 const sessionsRouter = express.Router();
 
@@ -26,6 +25,8 @@ sessionsRouter.post('/forgot-password', passwordResetController.requestPasswordR
 // Ruta para restablecer contraseña
 sessionsRouter.post('/reset-password', passwordResetController.resetPassword);
 
+// Ruta para realizar el seguimiento de la última conexión del usuario
+sessionsRouter.post('/track-last-connection', sessionsController.trackLastConnection);
 
 export default sessionsRouter;
 

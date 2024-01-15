@@ -174,6 +174,48 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
+passport.use(
+  new LocalStrategy(
+    {
+      usernameField: 'email',
+      passwordField: 'password',
+    },
+    async (email, password, done) => {
+      try {
+        const user = await User.findOne({ email });
+
+        if (!user) {
+          return done(null, false, { message: 'Usuario no encontrado' });
+        }
+
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
+        if (!passwordMatch) {
+          return done(null, false, { message: 'Contraseña incorrecta' });
+        }
+
+        // Actualizar last_connection al iniciar sesión
+        user.last_connection = Date.now();
+        user.save();
+
+        return done(null, user);
+      } catch (error) {
+        return done(error);
+      }
+    }
+  )
+);
+
+// Añade la siguiente ruta para actualizar last_connection al cerrar sesión
+app.post('/api/sessions/logout', (req, res) => {
+  // Actualizar last_connection al cerrar sesión
+  req.user.last_connection = Date.now();
+  req.user.save();
+
+  req.logout();
+  res.json({ message: 'Logout successful' });
+});
+
 app.get('/auth/github', passport.authenticate('github'));
 
 app.get(
@@ -194,6 +236,7 @@ app.use('/', viewsRouter);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use(express.static(path.join(__dirname, 'public')));
+
 
 // Configurar WebSocket
 io.on('connection', (socket) => {
@@ -217,9 +260,9 @@ app.get('/realtimeproducts', (req, res) => {
   res.render('realTimeProducts', { products }); // Renderizar la vista con los productos
 });
 
-// Ruta principal para mostrar el formulario de inicio de sesión
+// Ruta principal para mostrar los productos, como página principal de mi ecommerce
 app.get('/', (req, res) => {
-  res.render('products'); // Renderiza el formulario de inicio de sesión
+  res.render('products'); // Renderiza la vista de productos
 });
 
 // Configura nodemailer con tus credenciales de Gmail

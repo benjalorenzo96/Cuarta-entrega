@@ -92,10 +92,9 @@ const productsController = {
         )
       );
 
-      // Construir el objeto de respuesta paginada
-      const result = {
-        status: 'success',
-        payload: productDTOs,
+      // Renderizar la vista de productos con Handlebars
+      res.render('products', {
+        products: productDTOs,
         totalPages: totalPages,
         prevPage: page > 1 ? page - 1 : null,
         nextPage: page < totalPages ? page + 1 : null,
@@ -104,10 +103,8 @@ const productsController = {
         hasNextPage: page < totalPages,
         prevLink: page > 1 ? `/api/products?limit=${limit}&page=${page - 1}` : null,
         nextLink: page < totalPages ? `/api/products?limit=${limit}&page=${page + 1}` : null,
-      };
-
-      // Enviar la respuesta JSON
-      res.json(result);
+      });
+      
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Error al obtener productos' });

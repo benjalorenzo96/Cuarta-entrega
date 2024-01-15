@@ -94,6 +94,50 @@ const usersController = {
       res.status(500).json({ error: 'Error al cambiar el rol de usuario' });
     }
   },
+   /**
+   * Controlador para subir documentos y actualizar el estado del usuario.
+   * @route POST /api/users/{uid}/documents
+   * @group Usuarios - Operaciones relacionadas con usuarios
+   * @param {string} uid.path.required - ID del usuario.
+   * @param {Array} document.body.required - Archivos de documentos a subir.
+   * @returns {Object} 200 - Mensaje de éxito y detalles actualizados del usuario.
+   * @throws {400} - Archivos de documentos no proporcionados.
+   * @throws {404} - Usuario no encontrado.
+   * @throws {500} - Error al subir documentos o actualizar el usuario.
+   * @description Sube documentos y actualiza el estado del usuario.
+   */
+   uploadDocuments: async (req, res) => {
+    const userId = req.params.uid;
+    const documents = req.files; // El array de documentos se encuentra en req.files
+
+    try {
+      // Verificar si se proporcionaron documentos
+      if (!documents || documents.length === 0) {
+        return res.status(400).json({ error: 'Archivos de documentos no proporcionados.' });
+      }
+
+      // Buscar el usuario por ID
+      const user = await User.findById(userId);
+
+      if (!user) {
+        return res.status(404).json({ error: 'Usuario no encontrado' });
+      }
+
+      // Actualizar el estado del usuario y guardar los cambios
+      user.documents = documents.map((document) => ({
+        name: document.originalname,
+        reference: `/uploads/documents/${document.filename}`,
+      }));
+
+      await user.save();
+
+      // Responder con un mensaje de éxito y los detalles actualizados del usuario
+      res.status(200).json({ message: 'Documentos subidos y usuario actualizado exitosamente', user });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al subir documentos o actualizar el usuario' });
+    }
+  },
 };
 
 export default usersController;
