@@ -1,6 +1,6 @@
-import ProductDTO from '../dao/productDTO.js'; // Importamos el DTO
-import ProductDAO from '../dao/productDAO.js'; // Importamos el DAO
-import { io } from '../app.js'; // Importa el objeto io de tu app.js
+import ProductDTO from '../dao/productDTO.js';
+import ProductDAO from '../dao/productDAO.js';
+import { io } from '../app.js';
 
 /**
  * @typedef ProductDTO
@@ -104,14 +104,14 @@ const productsController = {
         prevLink: page > 1 ? `/api/products?limit=${limit}&page=${page - 1}` : null,
         nextLink: page < totalPages ? `/api/products?limit=${limit}&page=${page + 1}` : null,
       });
-      
+
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Error al obtener productos' });
     }
   },
 
- /**
+  /**
    * Elimina un producto por su ID.
    * @route DELETE /api/products/{id}
    * @group Productos - Operaciones relacionadas con productos
@@ -121,7 +121,6 @@ const productsController = {
    * @throws {500} - Error al eliminar el producto.
    * @description Elimina un producto por su ID.
    */
-
   deleteProduct: async (req, res) => {
     const productId = req.params.id;
 

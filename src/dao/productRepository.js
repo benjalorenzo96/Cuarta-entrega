@@ -5,7 +5,9 @@ import Product from './models/productModel.js';
 const ProductRepository = {
   getAllProducts: async () => {
     try {
-      return await Product.find();
+      const products = await Product.find();
+      console.log('Productos recuperados desde el Repositorio:', products); // Nuevo registro
+      return products;
     } catch (error) {
       throw new Error('Error al obtener todos los productos desde el Repositorio', error);
     }
