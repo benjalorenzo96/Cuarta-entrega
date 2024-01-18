@@ -6,7 +6,7 @@ Este proyecto corresponde al curso de Programación Backend de la Carrera de Des
 
 Crea un archivo `.env` en el directorio raíz del proyecto y añade las siguientes variables:
 
-DB_CONNECTION_STRING=mongodb+srv://benjalorenzo96:Benjam96@codercluster.8hfnnf7.mongodb.net/?retryWrites=true&w=majority
+DB_CONNECTION_STRING=mongodb+srv://benjalorenzo96:racing123456@codercluster.8hfnnf7.mongodb.net/?retryWrites=true&w=majority
 SECRET_KEY=tu-secreto
 GITHUB_CLIENT_ID=Iv1.f832426aac67f628
 GITHUB_CLIENT_SECRET=397af14ae92d316d3f6e93c3e192604f0732c0bb
