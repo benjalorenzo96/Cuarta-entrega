@@ -76,34 +76,8 @@ const productsController = {
       const totalProducts = await ProductDAO.getTotalProducts(filter);
       const totalPages = Math.ceil(totalProducts / limit);
 
-      // Obtener productos paginados y aplicar el formato del DTO
-      const products = await ProductDAO.getProducts(filter, skip, parseInt(limit), sortOptions);
-      const productDTOs = products.map((product) =>
-        new ProductDTO(
-          product._id,
-          product.title,
-          product.price,
-          product.category,
-          product.availability,
-          product.stock,
-          product.club,
-          product.league,
-          product.season,
-        )
-      );
+      await productService.renderProductsView(req, res, totalPages, page, limit);
 
-      // Renderizar la vista de productos con Handlebars
-      res.render('products', {
-        products: productDTOs,
-        totalPages: totalPages,
-        prevPage: page > 1 ? page - 1 : null,
-        nextPage: page < totalPages ? page + 1 : null,
-        page: page,
-        hasPrevPage: page > 1,
-        hasNextPage: page < totalPages,
-        prevLink: page > 1 ? `/api/products?limit=${limit}&page=${page - 1}` : null,
-        nextLink: page < totalPages ? `/api/products?limit=${limit}&page=${page + 1}` : null,
-      });
 
     } catch (error) {
       console.error(error);
