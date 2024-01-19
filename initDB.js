@@ -5,7 +5,7 @@ import Product from './src/dao/models/productModel.js';
 mongoose.connect(config.databaseConnectionString, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    dbName: 'products',  // Agrega esta línea para especificar la base de datos
+    dbName: 'Coderhouse',  // Agrega esta línea para especificar la base de datos
   });
   
   const db = mongoose.connection;
