@@ -20,7 +20,7 @@ viewsRouter.get('/register', viewsController.renderRegisterView);
 // Ruta para el formulario de inicio de sesión
 viewsRouter.get('/login', viewsController.renderLoginView);
 
-// Ruta para la vista de productos (requiere autenticación)
+// Ruta para la vista de productos (he quitadoel requerimiento de autenticación)
 viewsRouter.get('/products', viewsController.renderProductsView);
 
 export default viewsRouter;

@@ -30,7 +30,10 @@ const viewsController = {
   renderProductsView: async (req, res) => {
     try {
       const user = req.session.user;
-      const products = await productService.getProducts(); // Obtener la lista de productos desde tu servicio
+      const { page = 1, limit = 10 } = req.query;
+
+      // Obtener la lista de productos desde tu servicio, pasando la página y el límite
+      const products = await productService.getProducts({}, (page - 1) * limit, limit);
 
       res.render('products', { user, products });
     } catch (error) {
@@ -38,6 +41,7 @@ const viewsController = {
       res.status(500).json({ error: 'Error al obtener la lista de productos' });
     }
   },
+
 
   renderLoginButton: (req, res) => {
     res.render('loginButton');

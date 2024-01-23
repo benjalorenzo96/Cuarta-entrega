@@ -17,6 +17,7 @@ mongoose.connect(config.databaseConnectionString, {
   // Agregar productos (camisetas de fútbol)
   const footballShirts = [
     {
+      id: 1,
       title: 'Camiseta Local Barcelona',
       description: 'Camiseta de local del FC Barcelona',
       price: 20.000,
@@ -28,6 +29,7 @@ mongoose.connect(config.databaseConnectionString, {
       season: '2022-2023',
     },
     {
+      id: 2,
       title: 'Camiseta Visitante Real Madrid',
       description: 'Camiseta de visitante del Real Madrid',
       price: 25.000,
@@ -39,6 +41,7 @@ mongoose.connect(config.databaseConnectionString, {
       season: '2022-2023',
     },
     {
+      id: 3,
       title: 'Camiseta Local Manchester United',
       description: 'Camiseta de local del Manchester United',
       price: 22.000,
@@ -50,6 +53,7 @@ mongoose.connect(config.databaseConnectionString, {
       season: '2022-2023',
     },
     {
+        id: 4,
         title: 'Camiseta Local Racing Club',
         description: 'Camiseta de local de Racing Club',
         price: 20.000,
@@ -61,6 +65,7 @@ mongoose.connect(config.databaseConnectionString, {
         season: '2022-2023',
       },
       {
+        id: 5,
         title: 'Camiseta Local Banfield',
         description: 'Camiseta de local de Banfield',
         price: 17.000,
@@ -72,6 +77,7 @@ mongoose.connect(config.databaseConnectionString, {
         season: '2022-2023',
       },
       {
+        id: 6,
         title: 'Camiseta Local Manchester City',
         description: 'Camiseta de local del Manchester City',
         price: 23.000,
@@ -83,6 +89,7 @@ mongoose.connect(config.databaseConnectionString, {
         season: '2022-2023',
       },
       {
+        id: 7,
         title: 'Camiseta Local Inter',
         description: 'Camiseta de local del Inter',
         price: 24.000,
