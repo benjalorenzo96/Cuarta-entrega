@@ -1,5 +1,5 @@
 // services/productService.js
-import Product from '../dao/models/productModel.js';
+import Product from '../dao/models/productModel.js'; // Asegúrate de tener esta línea
 
 const productService = {
   getTotalProducts: async (filter) => {
@@ -26,19 +26,20 @@ const productService = {
     }
   },
 
-   renderProductsView: async (req, res) => {
+  renderProductsView: async (req, res, totalPages, page, limit) => {
     try {
       const user = req.session.user;
-      const products = await productService.getProducts(); // Obtener la lista de productos desde tu servicio
+      const products = await productService.getProducts({}, (page - 1) * limit, limit, {});
 
-      res.render('products', { user, products });
+      res.render('products', { user, products, totalPages, page, limit });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Error al obtener la lista de productos' });
     }
   },
 
-  // Puedes agregar otras funciones relacionadas con productos aquí si es necesario
+  // ... otros métodos
 };
 
 export default productService;
+

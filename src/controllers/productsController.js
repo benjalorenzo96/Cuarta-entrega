@@ -72,12 +72,15 @@ const productsController = {
     }
 
     try {
-      // Obtener el total de productos y calcular el número total de páginas
+      // Obtener el número total de productos y calcular el número total de páginas
       const totalProducts = await ProductDAO.getTotalProducts(filter);
       const totalPages = Math.ceil(totalProducts / limit);
 
-      await productService.renderProductsView(req, res, totalPages, page, limit);
+      // Obtener la lista de productos
+      const products = await ProductDAO.getProducts(filter, skip, limit, sortOptions);
 
+      // Renderizar la vista de productos
+      res.render('products', { user: req.session.user, products, totalPages, page, limit });
 
     } catch (error) {
       console.error(error);
@@ -120,10 +123,10 @@ const productsController = {
   createProduct: async (req, res) => {
     try {
       // Extraer datos del cuerpo de la solicitud
-      const { title, description, price, category, availability, stock } = req.body;
+      const { id, title, price, thumbnail, category, availability, stock, club, league, season } = req.body;
 
       // Crear un objeto ProductDTO
-      const newProductDTO = new ProductDTO(title, description, price, category, availability, stock);
+      const newProductDTO = new ProductDTO(id, title, price, thumbnail, category, availability, stock, club, league, season);
 
       // Utilizar el modelo para crear un nuevo documento en la colección de productos
       const createdProduct = await Product.create(newProductDTO);

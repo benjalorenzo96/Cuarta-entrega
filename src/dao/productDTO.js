@@ -1,9 +1,10 @@
 // dao/productDTO.js
 class ProductDTO {
-  constructor(id, title, price, category, availability, stock, club, league, season) {
+  constructor(id, title, price, thumbnail, category, availability, stock, club, league, season) {
     this.id = id;
     this.title = title;
     this.price = price;
+    this.thumbnail = thumbnail;
     this.category = category;
     this.availability = availability;
     this.stock = stock;
