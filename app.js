@@ -24,6 +24,8 @@ import { errorHandler } from './src/testingutils/errorHandler.js';
 import { developmentLogger, productionLogger } from './src/testingutils/logger.js';
 import config from './config.js';
 import swagger from './docs/swagger.js';
+import clearInactiveUsers from './src/controllers/clearInactiveUsers.js';
+
 
 
 program.option('--mode <mode>', 'Especificar el modo (development o production)').parse(process.argv);
@@ -70,6 +72,7 @@ app.get('/loggerTest', (req, res) => {
 mongoose.connect(config.databaseConnectionString, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  dbName: 'Coderhouse',  // Agrega esta línea para especificar la base de datos
 });
 
 const db = mongoose.connection;
@@ -264,6 +267,16 @@ app.get('/realtimeproducts', (req, res) => {
 app.get('/', (req, res) => {
   res.render('products'); // Renderiza la vista de productos
 });
+
+// Ruta para el carrito
+app.get('/cart', (req, res) => {
+  // Puedes realizar lógica adicional aquí antes de renderizar la vista
+  res.render('cart'); // Renderiza la vista del carrito
+});
+
+// Añadir la ruta para limpiar usuarios inactivos
+app.delete('/api/users', clearInactiveUsers);
+
 
 // Configura nodemailer con tus credenciales de Gmail
 const transporter = nodemailer.createTransport({

@@ -29,7 +29,7 @@ async function writeFile(filePath, data) {
 }
 
 // Configurar WebSocket
-const PRODUCTS_FILE = './src/Productos.json';
+const PRODUCTS_FILE = './initDB.js';
 
 io.on('connection', (socket) => {
   console.log('Usuario conectado al socket');

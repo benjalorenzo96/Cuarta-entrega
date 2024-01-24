@@ -66,33 +66,38 @@ const cartsController = {
    * @throws {500} - Error al agregar el producto al carrito.
    * @description Agrega un producto al carrito, verificando la disponibilidad de stock y propiedad (solo para usuarios premium).
    */
-  addToCart: async (req, res) => {
-    const productId = req.params.pid;
-    const quantity = parseInt(req.body.quantity);
+addToCart: async (req, res) => {
+  const productId = req.params.pid;
+  const quantity = parseInt(req.body.quantity);
 
-    try {
-      // Obtener información del producto
-      const product = await ProductDAO.getProductById(productId);
+  try {
+    // Obtener información del producto
+    const product = await ProductDAO.getProductById(productId);
 
-      // Verificar propiedad del producto (solo para usuarios premium)
-      if (req.user.role === 'premium' && product.owner === req.user.email) {
-        return res.status(403).json({ error: 'No puedes agregar a tu carrito un producto que te pertenece' });
-      }
-
-      // Verificar disponibilidad de stock
-      if (quantity > product.stock) {
-        return res.status(400).json({ error: 'No hay suficiente stock disponible para agregar la cantidad solicitada' });
-      }
-
-      // Actualizar el carrito con el nuevo producto
-      await updateCart(req.user.cartId, productId, quantity);
-
-      res.status(200).json({ message: 'Producto agregado al carrito exitosamente' });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Error al agregar el producto al carrito' });
+    // Verificar propiedad del producto (solo para usuarios premium)
+    if (req.user.role === 'premium' && product.owner === req.user.email) {
+      return res.status(403).json({ error: 'No puedes agregar a tu carrito un producto que te pertenece' });
     }
-  },
+
+    // Verificar disponibilidad de stock
+    if (quantity > product.stock) {
+      return res.status(400).json({ error: 'No hay suficiente stock disponible para agregar la cantidad solicitada' });
+    }
+
+    // Actualizar el carrito con el nuevo producto
+    await updatedCart(req.user.cartId, productId, quantity);
+
+    // Guardar los cambios en el carrito
+    const updatedCart = await Cart.findById(req.user.cartId);
+    await updatedCart.save();
+
+    res.status(200).json({ message: 'Producto agregado al carrito exitosamente' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al agregar el producto al carrito' });
+  }
+}
+
 }
 
 export default cartsController;

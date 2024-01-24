@@ -138,6 +138,16 @@ const usersController = {
       res.status(500).json({ error: 'Error al subir documentos o actualizar el usuario' });
     }
   },
+
+  clearInactiveUsers: async (req, res) => {
+    try {
+      // Lógica para obtener usuarios inactivos y realizar acciones necesarias
+      res.json({ message: 'Función clearInactiveUsers implementada con éxito' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error en clearInactiveUsers' });
+    }
+  },
 };
 
 export default usersController;

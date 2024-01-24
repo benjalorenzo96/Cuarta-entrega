@@ -39,6 +39,13 @@ usersRouter.post('/:uid', usersController.changeUserRole);
 // Nueva ruta para subir documentos
 usersRouter.post('/:uid/documents', upload.array('document', 5), usersController.uploadDocuments);
 
+// Obtener todos los usuarios
+usersRouter.get('/', usersController.getAllUsers);
+
+// Limpiar usuarios inactivos
+usersRouter.delete('/', usersController.clearInactiveUsers);
+
+
 export default usersRouter;
 
 
