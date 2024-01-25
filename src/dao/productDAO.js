@@ -5,11 +5,12 @@ import ProductRepository from './productRepository.js';
 const ProductDAO = {
   getProducts: async () => {
     try {
-      return await ProductRepository.getAllProducts();
+       return await ProductRepository.getAllProducts();
     } catch (error) {
-      throw new Error('Error al obtener todos los productos desde el DAO', error);
+       throw new Error('Error al obtener todos los productos desde el DAO', error);
     }
-  },
+ },
+ 
 
   getProductById: async (productId) => {
     try {

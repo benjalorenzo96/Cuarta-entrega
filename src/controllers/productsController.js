@@ -73,21 +73,31 @@ const productsController = {
 
     try {
       // Obtener el número total de productos y calcular el número total de páginas
-      const totalProducts = await ProductDAO.getTotalProducts(filter);
+      const totalProducts = await ProductDAO.getProducts(filter);
       const totalPages = Math.ceil(totalProducts / limit);
 
       // Obtener la lista de productos
       const products = await ProductDAO.getProducts(filter, skip, limit, sortOptions);
 
+      // Formatear los productos para asegurar las propiedades requeridas
+      const formattedProducts = products.map(product => ({
+        id: product._id.toString(),
+        title: product.title,
+        price: product.price,
+        thumbnail: product.thumbnail,
+        club: product.club,
+        league: product.league,
+        season: product.season,
+      }));
+
       // Renderizar la vista de productos
-      res.render('products', { user: req.session.user, products, totalPages, page, limit });
+      res.render('products', { user: req.session.user, products: formattedProducts, totalPages, page, limit });
 
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Error al obtener productos' });
     }
   },
-
   /**
    * Elimina un producto por su ID.
    * @route DELETE /api/products/{id}

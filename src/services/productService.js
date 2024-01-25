@@ -8,7 +8,9 @@ const productService = {
       return totalProducts;
     } catch (error) {
       console.error(error);
-      throw new Error('Error al obtener el total de productos');
+      console.error('Error al obtener productos paginados', error);
+      res.status(500).json({ error: 'Error al obtener productos paginados' });
+
     }
   },
 

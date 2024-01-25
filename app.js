@@ -265,7 +265,7 @@ app.get('/realtimeproducts', (req, res) => {
 
 // Ruta principal para mostrar los productos, como página principal de mi ecommerce
 app.get('/', (req, res) => {
-  res.render('products'); // Renderiza la vista de productos
+  res.render('login'); // Renderiza la vista de productos
 });
 
 // Ruta para el carrito
