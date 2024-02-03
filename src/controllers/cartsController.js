@@ -3,6 +3,136 @@ import Ticket from '../dao/models/ticketModel.js';
 import ProductDAO from '../dao/productDAO.js';
 import { processCart, generateUniqueCode } from '../services/cartService.js';
 
+const cartsController = {
+
+  /**
+   * Controlador para obtener un carrito por su ID.
+   * @route GET /api/carts/:cid
+   * @group Carritos - Operaciones relacionadas con carritos de compra
+   * @param {string} cid.path.required - ID del carrito.
+   * @returns {Object} 200 - Detalles del carrito.
+   * @throws {404} - Carrito no encontrado.
+   * @throws {500} - Error al obtener detalles del carrito.
+   * @description Obtiene información detallada de un carrito, incluidos los productos en él.
+   */
+  getCartById: async (req, res) => {
+    const cartId = req.params.cid;
+
+    try {
+      const cart = await Cart.findById(cartId); // Ajusta según tu modelo y lógica
+      if (!cart) {
+        return res.status(404).json({ error: 'Carrito no encontrado' });
+      }
+
+      res.status(200).json(cart);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al obtener detalles del carrito' });
+    }
+  },
+
+  /**
+   * Controlador para eliminar un producto del carrito.
+   * @route DELETE /api/carts/:cid/products/:pid
+   * @group Carritos - Operaciones relacionadas con carritos de compra
+   * @param {string} cid.path.required - ID del carrito.
+   * @param {string} pid.path.required - ID del producto a eliminar del carrito.
+   * @returns {Object} 200 - Mensaje de éxito.
+   * @throws {404} - Producto no encontrado en el carrito.
+   * @throws {500} - Error al eliminar el producto del carrito.
+   * @description Elimina un producto específico del carrito.
+   */
+  deleteProductFromCart: async (req, res) => {
+    const cartId = req.params.cid;
+    const productId = req.params.pid;
+
+    try {
+      // Implementa la lógica para eliminar el producto del carrito
+      // (puedes usar Cart.findByIdAndUpdate o el método que prefieras)
+      await Cart.findByIdAndUpdate(cartId, { $pull: { products: { productId } } });
+
+      res.status(200).json({ message: 'Producto eliminado del carrito exitosamente' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al eliminar el producto del carrito' });
+    }
+  },
+
+  /**
+   * Controlador para actualizar el carrito con un arreglo de productos.
+   * @route PUT /api/carts/:cid
+   * @group Carritos - Operaciones relacionadas con carritos de compra
+   * @param {string} cid.path.required - ID del carrito.
+   * @returns {Object} 200 - Mensaje de éxito.
+   * @throws {500} - Error al actualizar el carrito.
+   * @description Actualiza el carrito con un nuevo arreglo de productos.
+   */
+  updateCart: async (req, res) => {
+    const cartId = req.params.cid;
+
+    try {
+      // Implementa la lógica para actualizar el carrito
+      // (puedes usar Cart.findByIdAndUpdate o el método que prefieras)
+      await Cart.findByIdAndUpdate(cartId, { $set: { products: req.body.products } });
+
+      res.status(200).json({ message: 'Carrito actualizado exitosamente' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al actualizar el carrito' });
+    }
+  },
+
+  /**
+   * Controlador para actualizar la cantidad de ejemplares del producto en el carrito.
+   * @route PUT /api/carts/:cid/products/:pid
+   * @group Carritos - Operaciones relacionadas con carritos de compra
+   * @param {string} cid.path.required - ID del carrito.
+   * @param {string} pid.path.required - ID del producto en el carrito.
+   * @returns {Object} 200 - Mensaje de éxito.
+   * @throws {500} - Error al actualizar la cantidad de ejemplares.
+   * @description Actualiza la cantidad de ejemplares del producto en el carrito.
+   */
+  updateProductQuantity: async (req, res) => {
+    const cartId = req.params.cid;
+    const productId = req.params.pid;
+    const newQuantity = req.body.quantity;
+
+    try {
+      // Implementa la lógica para actualizar la cantidad de ejemplares del producto en el carrito
+      // (puedes usar Cart.findOneAndUpdate o el método que prefieras)
+      await Cart.findOneAndUpdate({ _id: cartId, 'products.productId': productId },
+        { $set: { 'products.$.quantity': newQuantity } });
+
+      res.status(200).json({ message: 'Cantidad de producto actualizada exitosamente' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al actualizar la cantidad de ejemplares' });
+    }
+  },
+
+  /**
+   * Controlador para eliminar todos los productos del carrito.
+   * @route DELETE /api/carts/:cid
+   * @group Carritos - Operaciones relacionadas con carritos de compra
+   * @param {string} cid.path.required - ID del carrito.
+   * @returns {Object} 200 - Mensaje de éxito.
+   * @throws {500} - Error al eliminar los productos del carrito.
+   * @description Elimina todos los productos del carrito.
+   */
+  deleteCart: async (req, res) => {
+    const cartId = req.params.cid;
+
+    try {
+      // Implementa la lógica para eliminar todos los productos del carrito
+      // (puedes usar Cart.findByIdAndUpdate o el método que prefieras)
+      await Cart.findByIdAndUpdate(cartId, { $set: { products: [] } });
+
+      res.status(200).json({ message: 'Productos eliminados del carrito exitosamente' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al eliminar los productos del carrito' });
+    }
+  },
 /**
  * Controlador para realizar la compra de un carrito.
  * @route POST /api/carts/:cid/purchase
@@ -13,7 +143,6 @@ import { processCart, generateUniqueCode } from '../services/cartService.js';
  * @throws {500} - Error al procesar la compra del carrito.
  * @description Realiza la compra de un carrito, genera un ticket y actualiza el estado del carrito.
  */
-const cartsController = {
   purchaseCart: async (req, res) => {
     const cartId = req.params.cid;
 
