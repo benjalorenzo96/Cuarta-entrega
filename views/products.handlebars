@@ -33,9 +33,7 @@
   // Función para agregar un producto al carrito
 function addToCart(productId) {
   const productIdToAdd = productId;
-
-  // Utiliza el ID del carrito del usuario actual
-  const cartId = '{{user.cartId}}'; // Asegúrate de que estés obteniendo el ID del carrito de la manera correcta
+  const cartId = '{{user.cartId}}';
 
   fetch(`/api/carts/${cartId}/products/${productIdToAdd}`, {
     method: 'PUT',
@@ -43,7 +41,8 @@ function addToCart(productId) {
   .then(response => {
     if (response.status === 200) {
       console.log('Producto agregado al carrito:', productIdToAdd);
-      // Actualiza la vista o realiza cualquier otra acción necesaria
+      // Actualiza la vista o redirige al usuario a la vista del carrito
+      window.location.href = '/cart';  // Redirige a la vista del carrito
     } else {
       console.error('Error al agregar el producto al carrito');
     }
