@@ -85,13 +85,11 @@ const cartsController = {
       }
   
       // Actualizar el carrito con el nuevo producto
-      await updateCart(req.user.cartId, productId, quantity);  // Cambié updatedCart a updateCart
+      await updatedCart(req.user.cartId, productId, quantity);
   
       // Guardar los cambios en el carrito
       const updatedCart = await Cart.findById(req.user.cartId);
-      await updatedCart.save();
-  
-      res.status(200).json({ message: 'Producto agregado al carrito exitosamente' });
+      res.status(200).json({ message: 'Producto agregado al carrito exitosamente', updatedCart });;
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Error al agregar el producto al carrito' });

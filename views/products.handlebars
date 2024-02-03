@@ -22,7 +22,7 @@
                     <p class="text-gray-700">Club: {{this.club}}</p>
                     <p class="text-gray-700">Liga: {{this.league}}</p>
                     <p class="text-gray-700">Temporada: {{this.season}}</p>
-                    <button onclick="addToCart('{{this.id}}')" class="bg-green-500 text-white px-4 py-2 rounded-md">Agregar al carrito</button>
+                    <button onclick="addToCart('{{this._id}}')" class="bg-green-500 text-white px-4 py-2 rounded-md">Agregar al carrito</button>
                 </li>
             {{/each}}
         </ul>
@@ -31,30 +31,27 @@
 
   <script>
   // Función para agregar un producto al carrito
-  function addToCart(productId) {
+function addToCart(productId) {
+  const productIdToAdd = productId;
 
-    // Obtén el ID del producto desde el atributo data-product-id
-    const productIdToAdd = productId;
+  // Utiliza el ID del carrito del usuario actual
+  const cartId = '{{user.cartId}}'; // Asegúrate de que estés obteniendo el ID del carrito de la manera correcta
 
-    // Aquí puedes realizar una solicitud al servidor para agregar el producto al carrito
-    // Asegúrate de reemplazar ':cid' con el ID real del carrito
-    // Ejemplo de solicitud fetch (debes implementar tu ruta y método correspondientes)
-    fetch(`/api/carts/:cid/products/${productIdToAdd}`, {
-      method: 'PUT', // Puedes usar PUT para agregar el producto
-    })
-    .then(response => {
-      if (response.status === 200) {
-        // Producto agregado al carrito con éxito
-        console.log('Producto agregado al carrito:', productIdToAdd);
-        // Actualiza la vista o realiza cualquier otra acción necesaria
-      } else {
-        console.error('Error al agregar el producto al carrito');
-      }
-    })
-    .catch(error => {
-      console.error('Error de red:', error);
-    });
-  }
+  fetch(`/api/carts/${cartId}/products/${productIdToAdd}`, {
+    method: 'PUT',
+  })
+  .then(response => {
+    if (response.status === 200) {
+      console.log('Producto agregado al carrito:', productIdToAdd);
+      // Actualiza la vista o realiza cualquier otra acción necesaria
+    } else {
+      console.error('Error al agregar el producto al carrito');
+    }
+  })
+  .catch(error => {
+    console.error('Error de red:', error);
+  });
+}
 </script>
 </body>
 </html>
