@@ -88,7 +88,8 @@ const productsController = {
         club: product.club,
         league: product.league,
         season: product.season,
-      }));
+      })).map(product => product.toObject());  // Agrega esta línea para convertir a objeto plano
+      
 
       // Renderizar la vista de productos
       res.render('products', { user: req.session.user, products: formattedProducts, totalPages, page, limit });

@@ -10,7 +10,6 @@ const productService = {
       console.error(error);
       console.error('Error al obtener productos paginados', error);
       res.status(500).json({ error: 'Error al obtener productos paginados' });
-
     }
   },
 
@@ -21,7 +20,7 @@ const productService = {
         .skip(skip)
         .limit(limit);
 
-      return products;
+      return products.map(product => product.toObject()); // Asegúrate de convertir a objeto plano
     } catch (error) {
       console.error(error);
       throw new Error('Error al obtener productos paginados');

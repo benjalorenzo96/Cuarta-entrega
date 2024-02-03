@@ -7,7 +7,7 @@ const ProductRepository = {
     try {
       const products = await Product.find();
       console.log('Productos recuperados desde el Repositorio:', products); // Nuevo registro
-      return products;
+      return products.map(product => product.toObject());  // Agrega esta línea para convertir a objeto plano
     } catch (error) {
       throw new Error('Error al obtener todos los productos desde el Repositorio', error);
     }

@@ -30,30 +30,31 @@
     </div>
 
   <script>
-    // Función para agregar un producto al carrito
-    function addToCart(productId) {
+  // Función para agregar un producto al carrito
+  function addToCart(productId) {
 
-      // Obtén el ID del producto desde el atributo data-product-id
-      const productIdToAdd = productId;
-      
-      // Aquí puedes realizar una solicitud al servidor para agregar el producto al carrito
-      // Ejemplo de solicitud fetch (debes implementar tu ruta y método correspondientes)
-      fetch(`/api/carts/:cid/products/${productIdToAdd}`, {
-        method: 'PUT', // Puedes usar PUT para agregar el producto
-      })
-      .then(response => {
-        if (response.status === 200) {
-          // Producto agregado al carrito con éxito
-          console.log('Producto agregado al carrito:', productIdToAdd);
-          // Actualiza la vista o realiza cualquier otra acción necesaria
-        } else {
-          console.error('Error al agregar el producto al carrito');
-        }
-      })
-      .catch(error => {
-        console.error('Error de red:', error);
-      });
-    }
-  </script>
+    // Obtén el ID del producto desde el atributo data-product-id
+    const productIdToAdd = productId;
+
+    // Aquí puedes realizar una solicitud al servidor para agregar el producto al carrito
+    // Asegúrate de reemplazar ':cid' con el ID real del carrito
+    // Ejemplo de solicitud fetch (debes implementar tu ruta y método correspondientes)
+    fetch(`/api/carts/:cid/products/${productIdToAdd}`, {
+      method: 'PUT', // Puedes usar PUT para agregar el producto
+    })
+    .then(response => {
+      if (response.status === 200) {
+        // Producto agregado al carrito con éxito
+        console.log('Producto agregado al carrito:', productIdToAdd);
+        // Actualiza la vista o realiza cualquier otra acción necesaria
+      } else {
+        console.error('Error al agregar el producto al carrito');
+      }
+    })
+    .catch(error => {
+      console.error('Error de red:', error);
+    });
+  }
+</script>
 </body>
 </html>
