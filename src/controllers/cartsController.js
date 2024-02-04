@@ -67,7 +67,7 @@ const cartsController = {
    * @throws {500} - Error al actualizar el carrito.
    * @description Actualiza el carrito con un nuevo arreglo de productos.
    */
-  updateCart: async (req, res) => {
+  updatedCart: async (req, res) => {
     const cartId = req.params.cid;
 
     try {
@@ -168,7 +168,7 @@ const cartsController = {
       await ticket.save();
 
       // Verificar propiedad de productos en el carrito (solo para usuarios premium)
-      const productsBelongingToUser = await checkProductsBelongingToUser(cartId, req.user.email);
+      const productsBelongingToUser = await productsBelongingToUser(cartId, req.user.email);
       if (req.user.role === 'premium' && productsBelongingToUser) {
         return res.status(403).json({ error: 'No puedes comprar un carrito que contiene productos que te pertenecen' });
       }

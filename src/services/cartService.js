@@ -81,7 +81,7 @@ export const removeProductsFromCart = async (cartId, productsNotPurchased) => {
  * @param {string} productId - ID del producto.
  * @param {number} quantity - Cantidad a actualizar.
  */
-export const updateCart = async (cartId, productId, quantity) => {
+export const updatedCart = async (cartId, productId, quantity) => {
   // Utiliza findByIdAndUpdate para actualizar el carrito
   await Cart.findByIdAndUpdate(
     cartId,

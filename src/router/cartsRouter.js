@@ -1,6 +1,5 @@
-// routes/cartsRouter.js
 import express from 'express';
-import { cartsController } from '../controllers/cartsController.js'; // Asegúrate de importar el controlador actualizado
+import { cartsController } from '../controllers/cartsController.js';
 
 const cartsRouter = express.Router();
 
@@ -11,7 +10,7 @@ cartsRouter.get('/:cid', cartsController.getCartById);
 cartsRouter.delete('/:cid/products/:pid', cartsController.deleteProductFromCart);
 
 // PUT /api/carts/:cid para actualizar el carrito con un arreglo de productos
-cartsRouter.put('/:cid', cartsController.updateCart);
+cartsRouter.put('/:cid', cartsController.updatedCart);
 
 // PUT /api/carts/:cid/products/:pid para actualizar la cantidad de ejemplares del producto en el carrito
 cartsRouter.put('/:cid/products/:pid', cartsController.updateProductQuantity);
@@ -22,8 +21,8 @@ cartsRouter.delete('/:cid', cartsController.deleteCart);
 // POST /api/carts/:cid/purchase para finalizar el proceso de compra del carrito
 cartsRouter.post('/:cid/purchase', cartsController.purchaseCart);
 
-// POST /api/carts/:pid/add para agregar un producto al carrito
-cartsRouter.post('/:pid/add', cartsController.addToCart);
+// POST /api/products/:pid/add para agregar un producto al carrito
+cartsRouter.post('/products/:pid/add', cartsController.addToCart);
 
 export default cartsRouter;
 
