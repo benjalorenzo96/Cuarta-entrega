@@ -36,7 +36,7 @@ function addToCart(productId) {
   const cartId = '{{user.cartId}}';
 
   fetch(`/api/carts/${cartId}/products/${productIdToAdd}`, {
-    method: 'PUT',
+    method: 'put',
   })
   .then(response => {
     if (response.status === 200) {

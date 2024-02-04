@@ -22,7 +22,7 @@ cartsRouter.delete('/:cid', cartsController.deleteCart);
 cartsRouter.post('/:cid/purchase', cartsController.purchaseCart);
 
 // POST /api/carts/:pid/add para agregar un producto al carrito
-cartsRouter.post('/:pid/add', cartsController.addToCart);
+cartsRouter.put('/:pid/add', cartsController.addToCart);
 
 
 export default cartsRouter;
