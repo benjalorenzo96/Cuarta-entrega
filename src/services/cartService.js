@@ -81,16 +81,28 @@ export const removeProductsFromCart = async (cartId, productsNotPurchased) => {
  * @param {string} productId - ID del producto.
  * @param {number} quantity - Cantidad a actualizar.
  */
-export const updatedCart = async (cartId, productId, quantity) => {
-  // Utiliza findByIdAndUpdate para actualizar el carrito
-  await Cart.findByIdAndUpdate(
-    cartId,
-    {
-      $addToSet: { items: { product: productId } },
-      $inc: { 'items.$.quantity': quantity },
-    },
-    { new: true }
-  );
+export const updateCart = async (cartId, productId, quantity) => {
+  try {
+    const cart = await Cart.findById(cartId);
+
+    // Busca el ítem del producto en el carrito
+    const cartProductIndex = cart.items.findIndex((item) => item.product.toString() === productId);
+
+    if (cartProductIndex !== -1) {
+      // Si el producto ya está en el carrito, actualiza la cantidad
+      cart.items[cartProductIndex].quantity += quantity;
+    } else {
+      // Si el producto no está en el carrito, agrégalo con la cantidad especificada
+      cart.items.push({ product: productId, quantity });
+    }
+
+    // Guarda los cambios en el carrito
+    await cart.save();
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error al actualizar el carrito');
+  }
 };
 
-export default cartService;
+// Exporta la función individualmente
+export { updateCart };

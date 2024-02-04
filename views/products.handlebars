@@ -22,36 +22,38 @@
                     <p class="text-gray-700">Club: {{this.club}}</p>
                     <p class="text-gray-700">Liga: {{this.league}}</p>
                     <p class="text-gray-700">Temporada: {{this.season}}</p>
-                    <button onclick="addToCart('{{this._id}}')" class="bg-green-500 text-white px-4 py-2 rounded-md">Agregar al carrito</button>
+                    <button onclick="addToCart('{{this._id}}', '{{user.cart}}')" class="bg-green-500 text-white px-4 py-2 rounded-md">Agregar al carrito</button>
                 </li>
             {{/each}}
         </ul>
-
     </div>
 
-<script>
-// Función para agregar un producto al carrito
-function addToCart(productId) {
-  const productIdToAdd = productId;
-  const cartId = '{{user.cartId}}';
-
-  fetch(`/api/carts/${cartId}/products/${productIdToAdd}`, {
-    method: 'PUT',
-  })
-  .then(response => {
-    if (response.status === 200) {
-      console.log('Producto agregado al carrito:', productIdToAdd);
-      // Actualiza la vista o redirige al usuario a la vista del carrito
-      window.location.href = '/cart';  // Redirige a la vista del carrito
-    } else {
-      console.error('Error al agregar el producto al carrito');
-    }
-  })
-  .catch(error => {
-    console.error('Error de red:', error);
-  });
-}
-</script>
-
+    <script>
+        // Función para agregar un producto al carrito
+    function addToCart(pid, cid) {
+            fetch(`/api/carts/${cid}/product/${pid}`, {
+                method: 'post'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Error HTTP ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(result => {
+                try {
+                    const parsedResult = JSON.parse(result);
+                    if (parsedResult.status === 'error') {
+                        throw new Error(parsedResult.error);
+                    }
+                    alert(`Ok. Todo salió bien! :)\nEl producto se agregó al carrito con id=${parsedResult.payload._id}!`);
+                } catch (error) {
+                    alert(`Ocurrió un error :(\n${error}`);
+                }
+            })
+            .catch(err => alert(`Ocurrió un error :(\n${err}`));
+        }
+    </script>
 </body>
 </html>
+
