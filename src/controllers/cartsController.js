@@ -223,8 +223,8 @@ addToCart: async (req, res) => {
     await updateCart(req.user.cartId, productId, quantity);
 
     // Obtén el carrito actualizado y responde con éxito
-    const updatedCart = await Cart.findById(req.user.cartId);
-    res.status(200).json({ message: 'Producto agregado al carrito exitosamente', updatedCart });
+    const updateCart = await Cart.findById(req.user.cartId);
+    res.status(200).json({ message: 'Producto agregado al carrito exitosamente', updateCart });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error al agregar el producto al carrito' });
