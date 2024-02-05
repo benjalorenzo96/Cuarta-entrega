@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
   },
   age: Number,
   password: String,
-  cart: {
+  cartId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Cart',
   },
@@ -37,3 +37,4 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model('User', userSchema);
 
 export default User;
+

@@ -35,15 +35,23 @@ const sessionsController = {
         age,
         password: hashedPassword,
       });
+// Guardar el nuevo usuario
+await newUser.save();
 
-      await newUser.save();
+// Crear un carrito para el nuevo usuario
+const newCart = new Cart();
+await newCart.save();
 
-      // Redirige al usuario a la página de inicio de sesión después de un registro exitoso
-      res.redirect('/login');
-    } catch (error) {
-      res.status(500).json({ error: 'Error al registrar el usuario.' });
-    }
-  },
+// Asignar el ID del carrito al usuario
+newUser.cartId = newCart._id;
+await newUser.save();
+
+// Redirigir al usuario a la página de inicio de sesión después de un registro exitoso
+res.redirect('/login');
+} catch (error) {
+res.status(500).json({ error: 'Error al registrar el usuario.' });
+}
+},
 
   /**
    * Controlador para iniciar sesión de usuario.
