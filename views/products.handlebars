@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Productos</title>
-    <link rel="stylesheet" href="/styles.css">
 </head>
 <body class="bg-gray-200">
     <div class="container mx-auto my-6">
@@ -34,9 +33,12 @@
 function addToCart(productId) {
   const productIdToAdd = productId;
   const cartId = '{{user.cartId}}';
+console.log('Cart ID:', cartId);
+console.log('Product ID:', productIdToAdd);
+
 
   fetch(`/api/carts/${cartId}/products/${productIdToAdd}`, {
-    method: 'put',
+    method: 'post',
   })
   .then(response => {
     if (response.status === 200) {
@@ -44,6 +46,8 @@ function addToCart(productId) {
       // Actualiza la vista o redirige al usuario a la vista del carrito
       window.location.href = '/cart';  // Redirige a la vista del carrito
     } else {
+            console.log("hola")
+
       console.error('Error al agregar el producto al carrito');
     }
   })
