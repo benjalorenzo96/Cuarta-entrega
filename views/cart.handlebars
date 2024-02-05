@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Carrito de Compras</title>
   <link rel="stylesheet" href="/styles.css">
+  <script src="https://js.stripe.com/v3/"></script>
 </head>
 <body class="bg-gray-200">
   <div class="container mx-auto my-6">
@@ -25,6 +26,8 @@
   </div>
 
   <script>
+    // Configura la clave pública de Stripe
+  const stripe = Stripe('pk_test_51OgXgIIJAfkNeHrjSc7mkixA9ETeigC3yAeGgC0d0caJLJyhAm1NGhQiNFvRH3aiiCx8OAnPPXKTz9MD6kuWrrSY00QO9dlMHD');
     // Función para eliminar un producto del carrito
     function removeFromCart(productId) {
 
@@ -51,12 +54,39 @@
     }
 
     // Función para procesar el pago
-    function checkout() {
-      // Implementa la lógica para procesar el pago aquí
+      // Función para procesar el pago
+   // Función para procesar el pago
+  async function checkout() {
+    // Aquí puedes obtener el monto total del carrito y otros detalles necesarios
+    const totalAmount = calcularMontoTotal(); // Implementa esta función según tu lógica
 
-      // Redirige al usuario a una pasarela de pago
-      window.location.href = 'https://pasarela-de-pago.com'; // Debo cambiar esta URL por la pasarela de pago real
+    try {
+      // Crea un pago en tu servidor
+      const response = await fetch('/api/payment-intents', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ amount: totalAmount, currency: 'ARS' }), // Ajusta la moneda según tus necesidades
+      });
+
+      const { client_secret } = await response.json();
+
+      // Confirma la autenticación del pago en el cliente
+      const result = await stripe.confirmCardPayment(client_secret);
+      if (result.error) {
+        console.error('Error al confirmar el pago:', result.error.message);
+        // Maneja el error según tus necesidades
+      } else {
+        // El pago fue confirmado exitosamente
+        console.log('Pago confirmado:', result.paymentIntent);
+        // Puedes redirigir al usuario a una página de confirmación o realizar otras acciones necesarias
+      }
+    } catch (error) {
+      console.error('Error al procesar el pago:', error.message);
+      // Maneja el error según tus necesidades
     }
+  }
   </script>
 </body>
 </html>

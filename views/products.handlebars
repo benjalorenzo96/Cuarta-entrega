@@ -43,11 +43,7 @@ console.log('Product ID:', productIdToAdd);
   .then(response => {
     if (response.status === 200) {
       console.log('Producto agregado al carrito:', productIdToAdd);
-      // Actualiza la vista o redirige al usuario a la vista del carrito
-      window.location.href = '/cart';  // Redirige a la vista del carrito
     } else {
-            console.log("hola")
-
       console.error('Error al agregar el producto al carrito');
     }
   })

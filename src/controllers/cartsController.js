@@ -202,19 +202,12 @@ purchaseCart: async (req, res) => {
    */
   // Controlador para agregar un producto al carrito
   addToCart: async (req, res) => {
-    console.log(req.params)
-const productId = req.params.pid;
-console.log("hola")
-console.log(productId)
-console.log(req.body)
-const quantity = parseInt(req.body.quantity);
-console.log(quantity)
+  const productId = req.params.pid;
+  const quantity = parseInt(req.body.quantity);
   
     try {
-      console.log("Número de línea 209");
       // Obtener información del producto
       const product = await ProductDAO.getProductById(productId);
-      console.log("Número de línea 211");
   
       // Verificar propiedad del producto (solo para usuarios premium)
       if (req.user.role === 'premium' && product.owner === req.user.email) {
@@ -227,23 +220,15 @@ console.log(quantity)
       }
   
       // Actualizar el carrito con el nuevo producto
-      console.log("Número de línea 224");
       await updateCart(req.user.cartId, productId, quantity);
-      console.log("Número de línea 226");
   
       // Obtén el carrito actualizado y responde con éxito
       const updatedCart = await Cart.findById(req.user.cartId);
-      console.log("Número de línea 231");
   
       res.status(200).json({ message: 'Producto agregado al carrito exitosamente', updatedCart });
-      console.log("hola")
 
     } catch (error) {
-      console.log("hola")
-
       console.error(error);
-      console.log("hola")
-
       res.status(500).json({ error: 'Error al agregar el producto al carrito' });
     }
   }

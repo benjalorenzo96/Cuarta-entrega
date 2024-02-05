@@ -22,9 +22,11 @@ import twilio from 'twilio';
 import { generateMockProducts } from './src/testingutils/mocking.js';
 import { errorHandler } from './src/testingutils/errorHandler.js';
 import { developmentLogger, productionLogger } from './src/testingutils/logger.js';
-import config from './config.js';
+import { config } from './config.js';
 import swagger from './docs/swagger.js';
 import clearInactiveUsers from './src/controllers/clearInactiveUsers.js';
+import paymentsRouter from './src/router/paymentsRouter.js';
+
 
 
 
@@ -234,6 +236,7 @@ app.use(passport.session());
 app.use('/api/users', usersRouter);
 app.use('/api/pets', petsRouter);
 app.use('/api/sessions', sessionsRouter);
+app.use('/api/payments', paymentsRouter);
 app.use('/', viewsRouter);
 
 const __filename = fileURLToPath(import.meta.url);
