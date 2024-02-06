@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
   },
   age: Number,
   password: String,
-  cartId: {
+  cart: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Cart',
   },

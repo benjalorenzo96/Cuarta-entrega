@@ -20,7 +20,7 @@ import Cart from '../dao/models/cartsModel.js';  // Agrega esta línea
  */
 const sessionsController = {
   registerUser: async (req, res) => {
-    const { first_name, last_name, email, age, password } = req.body;
+    const { first_name, last_name, email, age, password, cartId } = req.body;
 
     try {
       const existingUser = await User.findOne({ email });
@@ -41,18 +41,18 @@ const sessionsController = {
       // Guardar el nuevo usuario
       await newUser.save();
 
-      // Verificar si el usuario tiene un carrito existente
-      if (!existingUser.cartId) {
+      // Verificar si se proporcionó un cartId
+      if (cartId) {
+        // Asignar el ID del carrito proporcionado al usuario
+        newUser.cartId = cartId;
+        await newUser.save();
+      } else {
         // Crear un carrito para el nuevo usuario
         const newCart = new Cart();
         await newCart.save();
 
         // Asignar el ID del carrito al usuario
         newUser.cartId = newCart._id;
-        await newUser.save();
-      } else {
-        // Asignar el ID del carrito existente al usuario
-        newUser.cartId = existingUser.cartId;
         await newUser.save();
       }
 
@@ -135,12 +135,12 @@ const sessionsController = {
    * @description Obtiene y devuelve información del usuario actualmente autenticado.
    */
   getCurrentUser: (req, res) => {
-    // Aquí obtén la información necesaria del usuario
     const currentUserDTO = {
       username: req.user.username,
       role: req.user.role,
+      cartId: req.user.cartId // Agrega el cartId al objeto de respuesta
     };
-
+  
     res.json(currentUserDTO);
   },
 

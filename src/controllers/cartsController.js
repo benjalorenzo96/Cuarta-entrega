@@ -202,8 +202,9 @@ purchaseCart: async (req, res) => {
    */
   // Controlador para agregar un producto al carrito
   addToCart: async (req, res) => {
-  const productId = req.params.pid;
-  const quantity = parseInt(req.body.quantity);
+    const productId = req.params.pid;
+    const quantity = parseInt(req.body.quantity);
+    const cartId = req.params.cid; // Suponiendo que el cartId se pasa como un parámetro de ruta
   
     try {
       // Obtener información del producto
@@ -220,18 +221,19 @@ purchaseCart: async (req, res) => {
       }
   
       // Actualizar el carrito con el nuevo producto
-      await updateCart(req.user.cartId, productId, quantity);
+      await updateCart(cartId, productId, quantity);
   
       // Obtén el carrito actualizado y responde con éxito
-      const updatedCart = await Cart.findById(req.user.cartId);
+      const updatedCart = await Cart.findById(cartId);
   
       res.status(200).json({ message: 'Producto agregado al carrito exitosamente', updatedCart });
-
+  
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Error al agregar el producto al carrito' });
     }
   }
+  
 }
 
 export default cartsController;

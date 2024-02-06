@@ -76,21 +76,34 @@ export const removeProductsFromCart = async (cartId, productsNotPurchased) => {
 };
 
 /**
- * Actualiza el carrito con la cantidad de un producto específico.
+ * Actualiza el carrito con un producto específico.
  * @param {string} cartId - ID del carrito.
- * @param {string} productId - ID del producto.
- * @param {number} quantity - Cantidad a actualizar.
+ * @param {object} product - Objeto del producto a agregar.
+ * @param {number} quantity - Cantidad del producto a agregar.
  */
-export const updateCart = async (cartId, productId, quantity) => {
-  // Utiliza findByIdAndUpdate para actualizar el carrito
-  await Cart.findByIdAndUpdate(
-    cartId,
-    {
-      $addToSet: { items: { product: productId } },
-      $inc: { 'items.$.quantity': quantity },
-    },
-    { new: true }
-  );
+export const updateCart = async (cartId, product, quantity) => {
+  try {
+    const cart = await Cart.findById(cartId);
+    
+    // Verificar si el producto ya está en el carrito
+    const existingProductIndex = cart.products.findIndex(item => item.product.equals(product._id));
+
+    if (existingProductIndex !== -1) {
+      // Si el producto ya está en el carrito, actualiza la cantidad
+      cart.products[existingProductIndex].quantity += quantity;
+    } else {
+      // Si el producto no está en el carrito, agrégalo
+      cart.products.push({ product: product._id, quantity });
+    }
+
+    // Guardar el carrito actualizado
+    await cart.save();
+
+    return cart;
+  } catch (error) {
+    throw new Error('Error al actualizar el carrito');
+  }
 };
+
 
 export default cartService;
