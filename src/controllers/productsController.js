@@ -92,7 +92,8 @@ const productsController = {
       
 
       // Renderizar la vista de productos
-res.render('products', { user: req.session.user, products: formattedProducts, totalPages, page, limit, cartId: req.session.user.cartId });
+      res.render('products', { user: req.session.user, products: formattedProducts, totalPages, page, limit, cartId: req.session.user.cartId });
+
 
 
     } catch (error) {
