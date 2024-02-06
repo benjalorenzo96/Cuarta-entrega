@@ -280,6 +280,14 @@ app.get('/cart', (req, res) => {
 // Añadir la ruta para limpiar usuarios inactivos
 app.delete('/api/users', clearInactiveUsers);
 
+// Ruta para renderizar la plantilla products.handlebars
+app.get('/products', function(req, res) {
+  // Obtener el cartId del usuario (supongamos que está almacenado en req.session.cartId)
+  const cartId = req.session.cartId;
+
+  // Renderizar la plantilla, pasando el cartId como variable
+  res.render('products', { cartId: cartId });
+});
 
 // Configura nodemailer con tus credenciales de Gmail
 const transporter = nodemailer.createTransport({
