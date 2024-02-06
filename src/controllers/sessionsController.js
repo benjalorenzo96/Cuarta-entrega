@@ -73,22 +73,25 @@ const sessionsController = {
    * @description Inicia sesión de usuario utilizando la estrategia local de Passport.
    */
   loginUser: (req, res, next) => {
-    passport.authenticate('local', (err, user, info) => {
+    passport.authenticate('local', async (err, user, info) => {
       if (err) {
         return next(err);
       }
       if (!user) {
         return res.status(401).json({ error: 'Usuario no autenticado' });
       }
-      req.logIn(user, (err) => {
+      req.logIn(user, async (err) => {
         if (err) {
           return next(err);
         }
+        // Obtener el cartId del usuario
+        const cartId = user.cartId;
         // Redirige al usuario a la página de productos después del inicio de sesión exitoso
-        return res.redirect('/products');
+        return res.json({ user: { cartId: cartId, username: user.username, role: user.role } });
       });
     })(req, res, next);
   },
+  
 
   /**
    * Controlador para cerrar sesión de usuario.
