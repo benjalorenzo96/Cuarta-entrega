@@ -30,12 +30,20 @@
 
 <script>
 // Función para agregar un producto al carrito
+// Función para agregar un producto al carrito
 function addToCart(productId) {
   const productIdToAdd = productId;
-  const cartId = '{{user.cartId}}';
-console.log('Cart ID:', cartId);
-console.log('Product ID:', productIdToAdd);
+const cartId = '{{user.cartId}}';
+console.log('User Cart ID:', cartId);
 
+// Verificar si cartId está presente y no es una cadena vacía
+if (!cartId || cartId.trim() === '') {
+  console.error('Error: cartId no es válido');
+  return;
+}
+
+  console.log('Cart ID:', cartId);
+  console.log('Product ID:', productIdToAdd);
 
   fetch(`/api/carts/${cartId}/products/${productIdToAdd}`, {
     method: 'post',
@@ -51,6 +59,7 @@ console.log('Product ID:', productIdToAdd);
     console.error('Error de red:', error);
   });
 }
+
 </script>
 
 </body>

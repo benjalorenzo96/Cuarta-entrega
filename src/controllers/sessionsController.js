@@ -1,6 +1,8 @@
 import passport from 'passport';
 import bcrypt from 'bcrypt';
 import User from '../dao/models/userModel.js';
+import Cart from '../dao/models/cartsModel.js';  // Agrega esta línea
+
 
 /**
  * Controlador para registrar un nuevo usuario.
@@ -39,12 +41,26 @@ const sessionsController = {
       // Guardar el nuevo usuario
       await newUser.save();
 
+      // Verificar si el usuario tiene un carrito existente
+      if (!existingUser.cartId) {
+        // Crear un carrito para el nuevo usuario
+        const newCart = new Cart();
+        await newCart.save();
+
+        // Asignar el ID del carrito al usuario
+        newUser.cartId = newCart._id;
+        await newUser.save();
+      } else {
+        // Asignar el ID del carrito existente al usuario
+        newUser.cartId = existingUser.cartId;
+        await newUser.save();
+      }
 
       // Redirigir al usuario a la página de inicio de sesión después de un registro exitoso
-      res.redirect('/login');
+      res.redirect('/products');
     } catch (error) {
-      console.error(error); // Agregar esta línea para imprimir detalles del error en la consola
-      res.status(500).json({ error: 'Error al registrar el usuario.' });
+      console.error(error);
+      res.status(500).json({ error: 'Error al registrar el usuario.', details: error.message });
     }
   },
 
