@@ -21,7 +21,8 @@
                     <p class="text-gray-700">Club: {{this.club}}</p>
                     <p class="text-gray-700">Liga: {{this.league}}</p>
                     <p class="text-gray-700">Temporada: {{this.season}}</p>
-                    <button onclick="addToCart('{{this._id}}')" class="bg-green-500 text-white px-4 py-2 rounded-md">Agregar al carrito</button>
+                      <button onclick="addToCart('{{this._id}}', '{{../cartId}}')" class="bg-green-500 text-white px-4 py-2 rounded-md">Agregar al carrito</button>
+
                 </li>
             {{/each}}
         </ul>
@@ -30,26 +31,22 @@
 
 <script>
 // Función para agregar un producto al carrito
-function addToCart(productId) {
-const productIdToAdd = productId;
-const cartId = '{{cartId}}';
-console.log('User Cart ID:', cartId);
-
-// Verificar si cartId está presente y no es una cadena vacía
-if (!cartId || cartId.trim() === '') {
-  console.error('Error: cartId no es válido');
-  return;
-}
-
+function addToCart(productId, cartId) {
   console.log('Cart ID:', cartId);
-  console.log('Product ID:', productIdToAdd);
+  console.log('Product ID:', productId);
 
-  fetch(`/api/carts/${cartId}/products/${productIdToAdd}`, {
+  // Verifica si cartId está presente y no es una cadena vacía
+  if (!cartId || cartId.trim() === '') {
+    console.error('Error: cartId no es válido');
+    return;
+  }
+
+  fetch(`/api/carts/${cartId}/products/${productId}`, {
     method: 'post',
   })
   .then(response => {
     if (response.status === 200) {
-      console.log('Producto agregado al carrito:', productIdToAdd);
+      console.log('Producto agregado al carrito:', productId);
     } else {
       console.error('Error al agregar el producto al carrito');
     }
@@ -58,6 +55,7 @@ if (!cartId || cartId.trim() === '') {
     console.error('Error de red:', error);
   });
 }
+
 
 </script>
 

@@ -20,7 +20,7 @@ import Cart from '../dao/models/cartsModel.js';  // Agrega esta línea
  */
 const sessionsController = {
   registerUser: async (req, res) => {
-    const { first_name, last_name, email, age, password, cartId } = req.body;
+    const { first_name, last_name, email, age, password } = req.body;
 
     try {
       const existingUser = await User.findOne({ email });
@@ -30,31 +30,20 @@ const sessionsController = {
 
       const hashedPassword = await bcrypt.hash(password, 10);
 
+      const newCart = new Cart();
+      await newCart.save();
+
       const newUser = new User({
         first_name,
         last_name,
         email,
         age,
         password: hashedPassword,
+        cartId: newCart._id, // Asignar el ID del nuevo carrito al usuario
       });
 
       // Guardar el nuevo usuario
       await newUser.save();
-
-      // Verificar si se proporcionó un cartId
-      if (cartId) {
-        // Asignar el ID del carrito proporcionado al usuario
-        newUser.cartId = cartId;
-        await newUser.save();
-      } else {
-        // Crear un carrito para el nuevo usuario
-        const newCart = new Cart();
-        await newCart.save();
-
-        // Asignar el ID del carrito al usuario
-        newUser.cartId = newCart._id;
-        await newUser.save();
-      }
 
       // Redirigir al usuario a la página de inicio de sesión después de un registro exitoso
       res.redirect('/products');
@@ -84,13 +73,19 @@ const sessionsController = {
         if (err) {
           return next(err);
         }
-        // Obtener el cartId del usuario
-        const cartId = user.cartId;
+        // Almacenar los datos del usuario en la sesión
+        req.session.user = {
+          cartId: user.cartId,
+          username: user.username,
+          role: user.role
+        };
+        console.log(req.session.user.cartId)
         // Redirige al usuario a la página de productos después del inicio de sesión exitoso
-        return res.json({ user: { cartId: cartId, username: user.username, role: user.role } });
+        res.redirect('/products');
       });
     })(req, res, next);
   },
+  
   
 
   /**

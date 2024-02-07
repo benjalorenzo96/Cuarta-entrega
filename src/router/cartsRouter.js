@@ -1,3 +1,4 @@
+// cartsRouter.js
 import express from 'express';
 import cartsController from '../controllers/cartsController.js';
 
@@ -21,9 +22,8 @@ cartsRouter.delete('/:cid', cartsController.deleteCart);
 // POST /api/carts/:cid/purchase para finalizar el proceso de compra del carrito
 cartsRouter.post('/:cid/purchase', cartsController.purchaseCart);
 
-// POST /api/carts/:pid/add para agregar un producto al carrito
-cartsRouter.post('/:pid/add', cartsController.addToCart);
-
+// POST /api/carts/:cid/products/:pid/add para agregar un producto al carrito
+cartsRouter.post('/:cid/products/:pid/add', cartsController.addToCart); // Cambio en la ruta
 
 export default cartsRouter;
 
